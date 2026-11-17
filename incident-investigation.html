@@ -70,6 +70,8 @@
       --success: #2BB076;
       --r-4: 4px; --r-8: 8px; --r-9: 9px; --r-12: 12px;
       --r-14: 14px; --r-16: 16px; --r-24: 24px; --r-full: 999px;
+      --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+      --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
     }
 
     html, body {
@@ -84,7 +86,11 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-delay: 0s !important;
+      }
     }
 
     .app { display: flex; height: 100vh; overflow: hidden; }
@@ -461,11 +467,15 @@
     }
     .evidence-toggle:hover { background: rgba(255,255,255,0.08); }
     .evidence-toggle:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
-    .evidence-toggle .chevron { transition: transform 0.2s; margin-left: auto; }
+    .evidence-toggle .chevron { transition: transform 200ms var(--ease-out); margin-left: auto; }
     .evidence-toggle.open .chevron { transform: rotate(180deg); }
 
-    .evidence-list { display: none; flex-direction: column; gap: 3px; margin-bottom: 10px; }
-    .evidence-list.open { display: flex; }
+    .evidence-list {
+      display: flex; flex-direction: column; gap: 3px; margin-bottom: 10px;
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 220ms var(--ease-out), opacity 200ms var(--ease-out);
+    }
+    .evidence-list.open { max-height: 400px; opacity: 1; }
 
     .evidence-item {
       display: flex; align-items: flex-start; gap: 8px;
@@ -659,9 +669,10 @@
       font-size: 16px; font-weight: 500; font-family: 'Figtree', sans-serif;
       background: rgba(255,255,255,0.9); color: #2B1A98;
       border: 1px solid transparent; cursor: pointer;
-      transition: opacity 0.15s;
+      transition: opacity 150ms var(--ease-out), transform 120ms var(--ease-out);
     }
     .ra-execute-all-btn:hover { opacity: 0.88; }
+    .ra-execute-all-btn:active { transform: scale(0.97); }
 
     .ra-row {
       display: flex; align-items: flex-start; gap: 12px;
@@ -721,9 +732,10 @@
       font-size: 16px; font-weight: 400; font-family: 'Figtree', sans-serif;
       color: var(--text-70); background: transparent;
       border: 1px solid rgba(195,198,212,0.2);
-      cursor: pointer; transition: background 0.15s, color 0.15s;
+      cursor: pointer; transition: background 150ms var(--ease-out), color 150ms var(--ease-out), transform 120ms var(--ease-out);
     }
     .ra-modify:hover { background: rgba(46,49,65,0.5); color: var(--text-100); }
+    .ra-modify:active { transform: scale(0.97); }
     .ra-modify:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
 
     .ra-execute {
@@ -733,10 +745,11 @@
       background: rgba(255,255,255,0.8);
       color: #2B1A98;
       border: 1px solid transparent; cursor: pointer;
-      transition: opacity 0.15s, background 0.2s, border-color 0.2s;
+      transition: opacity 150ms var(--ease-out), background 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 120ms var(--ease-out);
     }
     .ra-execute-label { display: none; }
     .ra-execute:hover:not(:disabled) { opacity: 0.9; }
+    .ra-execute:active:not(:disabled) { transform: scale(0.95); }
     .ra-execute:focus-visible { outline: 2px solid rgba(255,255,255,0.6); outline-offset: 2px; }
 
     /* Spinner icon */
@@ -793,7 +806,7 @@
     .ra-chevron {
       flex-shrink: 0; margin-left: 4px;
       color: var(--text-50); display: flex; align-items: center;
-      transition: transform 0.22s ease;
+      transition: transform 200ms var(--ease-out);
     }
     .ra-row.is-open .ra-chevron { transform: rotate(180deg); }
 
@@ -856,9 +869,12 @@
       color: var(--text-70); background: var(--chip-bg);
       border: 1px solid rgba(255,255,255,0.1);
       box-shadow: var(--chip-shadow); cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      transition: background 150ms var(--ease-out), color 150ms var(--ease-out), transform 120ms var(--ease-out);
     }
-    .chip:hover { background: rgba(50,30,90,0.7); color: var(--text-90); }
+    @media (hover: hover) and (pointer: fine) {
+      .chip:hover { background: rgba(50,30,90,0.7); color: var(--text-90); }
+    }
+    .chip:active { transform: scale(0.97); }
     .chip:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
     .chip-arrow { color: var(--text-50); font-size: 16px; }
 
@@ -869,9 +885,12 @@
       color: white; border: 1px solid rgba(195,198,212,0.3);
       background: rgba(46,49,65,0.6); cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: background 0.15s;
+      transition: background 150ms var(--ease-out), transform 120ms var(--ease-out);
     }
-    .btn-outline:hover { background: rgba(60,63,82,0.8); }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-outline:hover { background: rgba(60,63,82,0.8); }
+    }
+    .btn-outline:active { transform: scale(0.97); }
     .btn-outline:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
 
     .btn-filled {
@@ -880,9 +899,12 @@
       color: white; background: linear-gradient(to right, #007f9b, #3e5a91);
       border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: opacity 0.15s;
+      transition: opacity 150ms var(--ease-out), transform 120ms var(--ease-out);
     }
-    .btn-filled:hover { opacity: 0.88; }
+    @media (hover: hover) and (pointer: fine) {
+      .btn-filled:hover { opacity: 0.88; }
+    }
+    .btn-filled:active { transform: scale(0.97); }
     .btn-filled:focus-visible { outline: 2px solid var(--color-blue-light); outline-offset: 2px; }
 
     /* ─── Bottom input ─── */
@@ -976,14 +998,49 @@
     /* ── Investigation build animation ── */
     [data-section] {
       opacity: 0;
-      transform: translateY(28px) scale(0.98);
-      transition: opacity 0.55s cubic-bezier(0.22,1,0.36,1),
-                  transform 0.55s cubic-bezier(0.22,1,0.36,1);
+      transform: translateY(20px) scale(0.98);
+      transition: opacity 450ms var(--ease-out),
+                  transform 450ms var(--ease-out);
     }
     [data-section].sec-visible {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+
+    @keyframes item-fade-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Items start hidden until their section reveals */
+    [data-section] .ai-conclusion-row,
+    [data-section] .ai-conclusion-body,
+    [data-section] .ai-meta-row,
+    [data-section] .fact-cell,
+    [data-section] .tl-item,
+    [data-section] .ra-row { opacity: 0; }
+
+    /* AI card: internal stagger */
+    [data-section].sec-visible .ai-conclusion-row { animation: item-fade-up 350ms var(--ease-out) 80ms  both; }
+    [data-section].sec-visible .ai-conclusion-body { animation: item-fade-up 350ms var(--ease-out) 180ms both; }
+    [data-section].sec-visible .ai-meta-row        { animation: item-fade-up 300ms var(--ease-out) 270ms both; }
+
+    /* Fact cells stagger */
+    [data-section].sec-visible .fact-cell:nth-child(1) { animation: item-fade-up 300ms var(--ease-out) 100ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(2) { animation: item-fade-up 300ms var(--ease-out) 170ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(3) { animation: item-fade-up 300ms var(--ease-out) 240ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(4) { animation: item-fade-up 300ms var(--ease-out) 310ms both; }
+
+    /* Timeline items stagger */
+    [data-section].sec-visible .tl-item:nth-child(1) { animation: item-fade-up 300ms var(--ease-out) 160ms both; }
+    [data-section].sec-visible .tl-item:nth-child(2) { animation: item-fade-up 300ms var(--ease-out) 250ms both; }
+    [data-section].sec-visible .tl-item:nth-child(3) { animation: item-fade-up 300ms var(--ease-out) 340ms both; }
+    [data-section].sec-visible .tl-item:nth-child(4) { animation: item-fade-up 300ms var(--ease-out) 430ms both; }
+
+    /* Action rows stagger */
+    [data-section].sec-visible .ra-row:nth-child(1) { animation: item-fade-up 320ms var(--ease-out) 100ms both; }
+    [data-section].sec-visible .ra-row:nth-child(2) { animation: item-fade-up 320ms var(--ease-out) 220ms both; }
+    [data-section].sec-visible .ra-row:nth-child(3) { animation: item-fade-up 320ms var(--ease-out) 340ms both; }
 
     /* Loading indicator */
     .investigation-loading {
@@ -1141,6 +1198,83 @@
     .prompt-send-btn:hover:not(:disabled) { background: rgba(107,95,227,0.5); color: white; }
     .prompt-send-btn:focus-visible { outline: 2px solid var(--color-blue-light); outline-offset: 2px; }
     .prompt-send-btn:disabled { opacity: 0.35; cursor: default; }
+
+    /* ── Cause & Effect graph (SVG-based) ──────────────────── */
+    .ce-wrap {}
+    .ce-svg-wrap {
+      padding: 20px 20px 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .ce-svg-graph { display: block; width: 100%; max-width: 100%; height: auto; }
+    .ce-node-g { cursor: pointer; }
+    .ce-node-g .ce-node-rect {
+      fill: rgba(255,255,255,0.03);
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 1;
+      transition: stroke 180ms var(--ease-out), fill 180ms var(--ease-out);
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .ce-node-g:hover .ce-node-rect {
+        fill: rgba(255,255,255,0.055);
+        stroke: rgba(255,255,255,0.2);
+      }
+    }
+    .ce-node-g.ce-selected .ce-node-rect {
+      fill: rgba(255,255,255,0.06) !important;
+      stroke: rgba(255,255,255,0.35) !important;
+    }
+    .ce-node-g { opacity: 0; }
+    .ce-node-g.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
+    /* Badges (HTML panel only) */
+    .ce-badge { font-size: 10.5px; font-weight: 500; padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .ce-badge-change { background: rgba(255,255,255,0.08); color: var(--text-50); }
+    .ce-badge-ok { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .ce-badge-warning { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .ce-badge-critical { background: rgba(239,68,68,0.15); color: #f87171; }
+    /* Detail panel */
+    .ce-panel {
+      display: flex; flex-direction: column; gap: 10px;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 20px;
+      border-top: 0px solid rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: max-height 320ms var(--ease-out),
+                  opacity 280ms var(--ease-out),
+                  padding 280ms var(--ease-out),
+                  border-top-width 0ms 320ms;
+    }
+    .ce-panel.ce-visible {
+      max-height: 320px;
+      padding: 16px 20px;
+      border-top-width: 1px;
+      opacity: 1;
+      transition: max-height 320ms var(--ease-out),
+                  opacity 280ms 40ms var(--ease-out),
+                  padding 280ms var(--ease-out);
+    }
+    .ce-panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .ce-panel-hdr-left { display: flex; flex-direction: column; gap: 2px; }
+    .ce-panel-title { font-size: 14px; font-weight: 600; color: var(--text-90); font-family: 'Figtree', sans-serif; }
+    .ce-panel-sub { font-size: 11.5px; color: var(--text-50); font-family: 'Poppins', sans-serif; }
+    .ce-panel-desc { font-size: 13px; color: var(--text-60); font-family: 'Poppins', sans-serif; margin: 0; }
+    .ce-panel-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .ce-panel-label { font-size: 12px; color: var(--text-40); font-family: 'Poppins', sans-serif; white-space: nowrap; min-width: 68px; }
+    .ce-panel-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .ce-chip { font-size: 12px; font-weight: 500; color: var(--text-80); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 3px 8px; font-family: 'Poppins', sans-serif; }
+    .ce-chip-note { font-size: 12px; color: var(--text-40); font-family: 'Poppins', sans-serif; }
+    .ce-panel-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 2px; }
+    /* Legend */
+    .ce-legend {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      padding: 10px 20px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .ce-legend-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11.5px; color: var(--text-40); font-family: 'Poppins', sans-serif;
+    }
   </style>
 </head>
 <body>
@@ -1606,8 +1740,127 @@
               </div><!-- /g1-inner-card Actions -->
 
 
+              <!-- § Follow-up chips -->
+              <div class="card-chips" id="followUpChips">
+                <div class="chips-row">
+                  <button class="chip" id="attackChainChip">
+                    <span class="chip-arrow">↳</span>
+                    Show me the full attack chain
+                  </button>
+                  <button class="chip">
+                    <span class="chip-arrow">↳</span>
+                    Could other hosts be affected?
+                  </button>
+                </div>
+              </div>
+
             </div><!-- /response-card -->
 
+          </div>
+        </div>
+      </div>
+
+      <!-- Attack path response (hidden until triggered) -->
+      <div class="chat-row" id="attackPathRow" style="display:none">
+        <div style="display:flex; gap:12px; align-items:flex-start; padding: 0 24px 0 0;">
+          <div class="ai-avatar" style="flex-shrink:0; margin-top:2px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="url(#ap-av-grad)"/><path d="M12 5c0 3.866-3.134 7-7 7 3.866 0 7 3.134 7 7 0-3.866 3.134-7 7-7-3.866 0-7-3.134-7-7z" fill="white" opacity="0.9"/><defs><linearGradient id="ap-av-grad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#6B5FE3"/><stop offset="1" stop-color="#A78BFA"/></linearGradient></defs></svg>
+          </div>
+          <div style="flex:1; min-width:0;">
+            <div class="ai-label">Cortex AI · Attack path analysis</div>
+            <div class="response-card" id="attackPathCard">
+              <div class="response-card-header">
+                <span class="rc-incident-name">Why was SERVER-02 compromised?</span>
+                <span class="bc-badge" style="background:rgba(239,68,68,0.15); color:#F87171; border-color:rgba(239,68,68,0.25);">3 causes · 11 min</span>
+              </div>
+
+              <!-- Cause & Effect graph (SVG canvas) -->
+              <div class="ce-wrap">
+                <div class="ce-svg-wrap">
+                  <svg id="ceGraph" class="ce-svg-graph" viewBox="0 0 908 232" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Attack chain graph">
+                    <defs>
+                      <marker id="ce-arr" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+                        <path d="M0,0.5 L8,4 L0,7.5 Z" fill="rgba(255,255,255,0.4)"/>
+                      </marker>
+                    </defs>
+                    <!-- Edges drawn by JS -->
+                    <g id="ceEdges"></g>
+
+                    <!-- col0 row0: VPN from Thailand -->
+                    <g class="ce-node-g" data-ce-id="vpn">
+                      <rect class="ce-node-rect" x="24" y="24" width="180" height="52" rx="8"/>
+                      <text x="36" y="45" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">VPN from Thailand</text>
+                      <text x="36" y="62" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">john.doe · 14:31</text>
+                      <rect x="145" y="41" width="51" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                      <text x="170" y="54" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif" text-anchor="middle">access</text>
+                    </g>
+
+                    <!-- col0 row1: No MFA policy -->
+                    <g class="ce-node-g" data-ce-id="nomfa">
+                      <rect class="ce-node-rect" x="24" y="92" width="180" height="52" rx="8"/>
+                      <text x="36" y="113" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">No MFA policy</text>
+                      <text x="36" y="130" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">Auth bypass · policy</text>
+                      <rect x="130" y="109" width="66" height="18" rx="9" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+                      <text x="163" y="122" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                    </g>
+
+                    <!-- col0 row2: Stale credentials -->
+                    <g class="ce-node-g" data-ce-id="stalecred">
+                      <rect class="ce-node-rect" x="24" y="160" width="180" height="52" rx="8"/>
+                      <text x="36" y="181" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Stale credentials</text>
+                      <text x="36" y="198" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">360-day password</text>
+                      <rect x="154" y="177" width="42" height="18" rx="9" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.2)" stroke-width="1"/>
+                      <text x="175" y="190" font-size="10" fill="#4ade80" font-family="Poppins,sans-serif" text-anchor="middle">✓ OK</text>
+                    </g>
+
+                    <!-- col1 row0: Credential dump -->
+                    <g class="ce-node-g" data-ce-id="cred">
+                      <rect class="ce-node-rect" x="364" y="58" width="180" height="52" rx="8"/>
+                      <text x="376" y="79" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Credential dump</text>
+                      <text x="376" y="96" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">WORKSTATION-14 · 14:35</text>
+                      <rect x="472" y="75" width="64" height="18" rx="9" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+                      <text x="504" y="88" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                    </g>
+
+                    <!-- col1 row1: Lateral movement -->
+                    <g class="ce-node-g" data-ce-id="lateral">
+                      <rect class="ce-node-rect" x="364" y="126" width="180" height="52" rx="8"/>
+                      <text x="376" y="147" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Lateral movement</text>
+                      <text x="376" y="164" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">RDP to SERVER-02 · 14:38</text>
+                      <rect x="472" y="143" width="64" height="18" rx="9" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+                      <text x="504" y="156" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                    </g>
+
+                    <!-- col2 row0: Ransomware drop (outcome) -->
+                    <g class="ce-node-g" data-ce-id="ransom">
+                      <rect class="ce-node-rect" x="704" y="92" width="180" height="52" rx="8"/>
+                      <text x="716" y="113" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Ransomware drop</text>
+                      <text x="716" y="130" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">lockbit_dropper · 14:42</text>
+                      <rect x="814" y="109" width="62" height="18" rx="9" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.25)" stroke-width="1"/>
+                      <text x="845" y="122" font-size="10" fill="#f87171" font-family="Poppins,sans-serif" text-anchor="middle">● Critical</text>
+                    </g>
+                  </svg>
+                </div>
+
+                <!-- Selected node detail panel (populated on click) -->
+                <div class="ce-panel" id="cePanel"></div>
+
+                <!-- Legend -->
+                <div class="ce-legend">
+                  <span class="ce-legend-item">
+                    <svg width="22" height="8" viewBox="0 0 22 8"><line x1="0" y1="4" x2="13" y2="4" stroke="rgba(255,255,255,0.4)" stroke-width="2"/><path d="M11,1 L18,4 L11,7 Z" fill="rgba(255,255,255,0.4)"/></svg>
+                    Causes
+                  </span>
+                  <span class="ce-legend-item">
+                    <svg width="22" height="8" viewBox="0 0 22 8"><line x1="0" y1="4" x2="22" y2="4" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="2 4"/></svg>
+                    Related
+                  </span>
+                  <span class="ce-legend-item" style="color:#4ade80;">✓ OK</span>
+                  <span class="ce-legend-item" style="color:#fbbf24;">△ Warning</span>
+                  <span class="ce-legend-item" style="color:#f87171;">● Critical</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1773,9 +2026,246 @@
       sections.forEach((el, i) => {
         setTimeout(() => {
           el.classList.add('sec-visible');
-        }, i * 550);
+        }, i * 400);
       });
     }, 1600);
+  }
+
+  let attackPathRevealed = false;
+  function revealAttackPath(chatArea) {
+    if (attackPathRevealed) return;
+    attackPathRevealed = true;
+
+    const loadingEl = document.createElement('div');
+    loadingEl.className = 'chat-row';
+    loadingEl.innerHTML = `<div style="padding:0 24px;"><div class="ai-thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+    chatArea.appendChild(loadingEl);
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    setTimeout(() => {
+      loadingEl.remove();
+      const row = document.getElementById('attackPathRow');
+      row.style.display = '';
+      chatArea.scrollTop = chatArea.scrollHeight;
+
+      // Stagger SVG node groups in
+      const nodes = row.querySelectorAll('.ce-node-g');
+      let t = 0;
+      nodes.forEach(node => {
+        setTimeout(() => node.classList.add('ce-visible'), t);
+        t += 150;
+      });
+
+      // Draw edges, wire clicks, then auto-select the outcome node
+      setTimeout(() => {
+        drawCeEdges();
+        setupNodeClicks();
+        setTimeout(() => {
+          const outcome = document.querySelector('#ceGraph [data-ce-id="ransom"]');
+          if (outcome) outcome.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        }, 5 * 200 + 400);
+      }, t + 80);
+
+    }, 1400);
+  }
+
+  const CE_NODE_DATA = {
+    vpn: {
+      title: 'VPN from Thailand', sub: 'john.doe · 14:31 · access',
+      badge: { cls: 'ce-badge-change', text: 'access' },
+      desc: 'Authenticated VPN session originating from Thailand — unusual location for this user.',
+      causedBy: [],
+      relatedTo: [{ label: 'No MFA policy', note: 'enabled access' }],
+      actions: [{ text: 'Block session', cls: 'btn-filled' }],
+    },
+    nomfa: {
+      title: 'No MFA policy', sub: 'Auth bypass · policy · Warning',
+      badge: { cls: 'ce-badge-warning', text: '△ Warning' },
+      desc: 'No multi-factor authentication enforced on VPN access for this account.',
+      causedBy: [],
+      relatedTo: [{ label: 'VPN from Thailand', note: 'allowed bypass' }],
+      actions: [{ text: 'Enforce MFA', cls: 'btn-filled' }],
+    },
+    stalecred: {
+      title: 'Stale credentials', sub: '360-day password · OK',
+      badge: { cls: 'ce-badge-ok', text: '✓ OK' },
+      desc: 'Password unchanged for 360 days. No active exploitation confirmed.',
+      causedBy: [],
+      relatedTo: [{ label: 'Ransomware drop', note: 'No change required' }],
+      actions: [{ text: 'Force reset', cls: 'btn-outline' }],
+    },
+    cred: {
+      title: 'Credential dump', sub: 'WORKSTATION-14 · 14:35 · Warning',
+      badge: { cls: 'ce-badge-warning', text: '△ Warning' },
+      desc: 'LSASS memory dump on WORKSTATION-14, 11 credential hashes extracted.',
+      causedBy: [{ label: 'VPN from Thailand', note: 'stolen hash' }, { label: 'No MFA policy', note: 'no 2FA block' }],
+      relatedTo: [],
+      actions: [{ text: 'Isolate workstation', cls: 'btn-filled' }],
+    },
+    lateral: {
+      title: 'Lateral movement', sub: 'RDP to SERVER-02 · 14:38 · Warning',
+      badge: { cls: 'ce-badge-warning', text: '△ Warning' },
+      desc: 'RDP connection from WORKSTATION-14 to SERVER-02 using john.doe credential hash.',
+      causedBy: [{ label: 'Credential dump', note: 'RDP via hash' }],
+      relatedTo: [],
+      actions: [{ text: 'Block RDP', cls: 'btn-filled' }],
+    },
+    ransom: {
+      title: 'Ransomware drop', sub: 'lockbit_dropper · SERVER-02 · 14:42 · outcome',
+      badge: { cls: 'ce-badge-critical', text: '● Critical' },
+      desc: '≈11 min from initial access to payload execution on SERVER-02.',
+      causedBy: [{ label: 'Credential dump', note: 'stolen hash' }, { label: 'Lateral movement', note: 'RDP pivot' }],
+      relatedTo: [{ label: 'Stale credentials', note: 'No change' }],
+      actions: [{ text: 'Explain this', cls: 'btn-outline' }, { text: 'Isolate SERVER-02', cls: 'btn-filled' }],
+    },
+  };
+
+  const CE_EDGES_DEF = [
+    { from: 'vpn',       to: 'cred',   type: 'cause',   label: 'stolen hash',  mx: 284, my: 60  },
+    { from: 'nomfa',     to: 'cred',   type: 'cause',   label: 'no 2FA',       mx: 284, my: 94  },
+    { from: 'cred',      to: 'ransom', type: 'cause',   label: '−3 min',       mx: 624, my: 94  },
+    { from: 'lateral',   to: 'ransom', type: 'cause',   label: '−4 min',       mx: 624, my: 134 },
+    { from: 'stalecred', to: 'ransom', type: 'related', label: 'No change',    mx: 454, my: 148 },
+  ];
+
+  const CE_PATHS = [
+    'M204,50 C284,50 284,84 364,84',
+    'M204,118 C284,118 284,84 364,84',
+    'M544,84 C624,84 624,118 704,118',
+    'M544,152 C624,152 624,118 704,118',
+    'M204,186 C454,186 454,118 704,118',
+  ];
+
+  function drawCeEdges() {
+    const edgesG = document.getElementById('ceEdges');
+    if (!edgesG) return;
+
+    CE_EDGES_DEF.forEach((ed, i) => {
+      const isCause = ed.type === 'cause';
+
+      // Group per edge for opacity control
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.dataset.from = ed.from;
+      g.dataset.to = ed.to;
+      edgesG.appendChild(g);
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', CE_PATHS[i]);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke-width', isCause ? '2' : '1.5');
+      path.setAttribute('stroke', isCause ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)');
+      if (isCause) path.setAttribute('marker-end', 'url(#ce-arr)');
+      else path.setAttribute('stroke-dasharray', '2 5');
+      path.style.opacity = '0';
+      g.appendChild(path);
+
+      const pillW = ed.label.length * 6.2 + 14;
+      const pillX = ed.mx - pillW / 2;
+
+      const pillRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      pillRect.setAttribute('x', pillX); pillRect.setAttribute('y', ed.my - 9);
+      pillRect.setAttribute('width', pillW); pillRect.setAttribute('height', 18);
+      pillRect.setAttribute('rx', '9');
+      pillRect.setAttribute('fill', '#080808');
+      pillRect.setAttribute('stroke', 'rgba(255,255,255,0.1)'); pillRect.setAttribute('stroke-width', '1');
+      pillRect.style.opacity = '0';
+      g.appendChild(pillRect);
+
+      const pillText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      pillText.setAttribute('x', ed.mx); pillText.setAttribute('y', ed.my + 4);
+      pillText.setAttribute('text-anchor', 'middle'); pillText.setAttribute('font-size', '10');
+      pillText.setAttribute('font-family', 'Poppins, sans-serif');
+      pillText.setAttribute('fill', isCause ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)');
+      pillText.textContent = ed.label;
+      pillText.style.opacity = '0';
+      g.appendChild(pillText);
+
+      const delay = i * 180;
+      if (isCause) {
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
+        path.style.opacity = '1';
+        path.style.transition = 'stroke-dashoffset 420ms var(--ease-out)';
+        setTimeout(() => {
+          path.style.strokeDashoffset = '0';
+          setTimeout(() => {
+            pillRect.style.transition = 'opacity 180ms var(--ease-out)';
+            pillText.style.transition = 'opacity 180ms var(--ease-out)';
+            pillRect.style.opacity = '1'; pillText.style.opacity = '1';
+          }, 320);
+        }, delay);
+      } else {
+        setTimeout(() => {
+          path.style.transition = 'opacity 320ms var(--ease-out)';
+          path.style.opacity = '1';
+          setTimeout(() => {
+            pillRect.style.transition = 'opacity 180ms var(--ease-out)';
+            pillText.style.transition = 'opacity 180ms var(--ease-out)';
+            pillRect.style.opacity = '1'; pillText.style.opacity = '1';
+          }, 260);
+        }, delay);
+      }
+    });
+  }
+
+  function setupNodeClicks() {
+    const panel = document.getElementById('cePanel');
+    if (!panel) return;
+
+    // Click on SVG background → deselect
+    document.getElementById('ceGraph').addEventListener('click', (e) => {
+      if (e.target.closest('.ce-node-g')) return;
+      document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => n.classList.remove('ce-selected'));
+      document.querySelectorAll('#ceEdges g[data-from]').forEach(eg => {
+        eg.style.transition = 'opacity 200ms var(--ease-out)';
+        eg.style.opacity = '1';
+      });
+      panel.classList.remove('ce-visible');
+    });
+
+    document.querySelectorAll('#ceGraph .ce-node-g').forEach(nodeEl => {
+      nodeEl.addEventListener('click', () => {
+        const id = nodeEl.dataset.ceId;
+        const data = CE_NODE_DATA[id];
+        if (!data) return;
+
+        // Update selection
+        document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => n.classList.remove('ce-selected'));
+        nodeEl.classList.add('ce-selected');
+
+        // Dim unrelated edges
+        document.querySelectorAll('#ceEdges g[data-from]').forEach(eg => {
+          const connected = eg.dataset.from === id || eg.dataset.to === id;
+          eg.style.transition = 'opacity 200ms var(--ease-out)';
+          eg.style.opacity = connected ? '1' : '0.18';
+        });
+
+        // Build panel HTML
+        const causedByRow = data.causedBy.length ? `<div class="ce-panel-row">
+          <span class="ce-panel-label">Caused by</span>
+          <div class="ce-panel-chips">${data.causedBy.map(c => `<span class="ce-chip">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
+        </div>` : '';
+        const relatedRow = data.relatedTo.length ? `<div class="ce-panel-row">
+          <span class="ce-panel-label">Related to</span>
+          <div class="ce-panel-chips">${data.relatedTo.map(c => `<span class="ce-chip">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
+        </div>` : '';
+
+        panel.innerHTML = `
+          <div class="ce-panel-header">
+            <div class="ce-panel-hdr-left">
+              <span class="ce-panel-title">${data.title}</span>
+              <span class="ce-panel-sub">${data.sub}</span>
+            </div>
+            <span class="ce-badge ${data.badge.cls}">${data.badge.text}</span>
+          </div>
+          <p class="ce-panel-desc">${data.desc}</p>
+          ${causedByRow}${relatedRow}
+          <div class="ce-panel-actions">
+            ${data.actions.map(a => `<button class="${a.cls}" style="font-size:12px;padding:6px 14px;">${a.text}</button>`).join('')}
+          </div>`;
+        panel.classList.add('ce-visible');
+      });
+    });
   }
 
   document.getElementById('chatSendBtn').addEventListener('click', function() {
@@ -1805,7 +2295,11 @@
     list.prepend(newItem);
 
     // Trigger card build
-    revealCard();
+    if (/attack.chain|attack chain|full chain/i.test(text)) {
+      revealAttackPath(chatArea);
+    } else {
+      revealCard();
+    }
 
     // Reset textarea
     ta.value = '';
