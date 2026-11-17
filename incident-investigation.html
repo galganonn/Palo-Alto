@@ -1234,12 +1234,26 @@
     .ce-badge-critical { background: rgba(239,68,68,0.15); color: #f87171; }
     /* Detail panel */
     .ce-panel {
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: 16px 20px;
       display: flex; flex-direction: column; gap: 10px;
-      opacity: 0; transition: opacity 300ms var(--ease-out);
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 20px;
+      border-top: 0px solid rgba(255,255,255,0.08);
+      opacity: 0;
+      transition: max-height 320ms var(--ease-out),
+                  opacity 280ms var(--ease-out),
+                  padding 280ms var(--ease-out),
+                  border-top-width 0ms 320ms;
     }
-    .ce-panel.ce-visible { opacity: 1; }
+    .ce-panel.ce-visible {
+      max-height: 320px;
+      padding: 16px 20px;
+      border-top-width: 1px;
+      opacity: 1;
+      transition: max-height 320ms var(--ease-out),
+                  opacity 280ms 40ms var(--ease-out),
+                  padding 280ms var(--ease-out);
+    }
     .ce-panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
     .ce-panel-hdr-left { display: flex; flex-direction: column; gap: 2px; }
     .ce-panel-title { font-size: 14px; font-weight: 600; color: var(--text-90); font-family: 'Figtree', sans-serif; }
