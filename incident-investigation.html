@@ -1276,19 +1276,19 @@
     .ce-svg-graph { display: block; width: 100%; max-width: 100%; height: auto; transform-origin: 0 0; will-change: transform; }
     .ce-node-g { cursor: pointer; }
     .ce-node-g .ce-node-rect {
-      fill: rgba(255,255,255,0.03);
+      fill: #111325;
       stroke: rgba(255,255,255,0.1);
       stroke-width: 1;
       transition: stroke 180ms var(--ease-out), fill 180ms var(--ease-out);
     }
     @media (hover: hover) and (pointer: fine) {
       .ce-node-g:hover .ce-node-rect {
-        fill: rgba(255,255,255,0.055);
+        fill: #1a2038;
         stroke: rgba(255,255,255,0.2);
       }
     }
     .ce-node-g.ce-selected .ce-node-rect {
-      fill: rgba(255,255,255,0.06) !important;
+      fill: #1f2642 !important;
       stroke: rgba(255,255,255,0.35) !important;
     }
     .ce-node-g { opacity: 0; }
@@ -2506,11 +2506,15 @@
       }
     });
     document.addEventListener('mouseup', () => {
-      if (dragging) { dragging = false; wrap.classList.remove('is-panning'); }
+      if (!dragging) return;
+      dragging = false;
+      wrap.classList.remove('is-panning');
+      // Reset didDrag after any synthetic click that fires right after mouseup
+      setTimeout(() => { didDrag = false; }, 0);
     });
-    // Block click-on-node after a real drag
+    // Block click-on-node after a real drag (fires before reset above)
     wrap.addEventListener('click', e => {
-      if (didDrag) { e.stopPropagation(); didDrag = false; }
+      if (didDrag) { e.stopPropagation(); }
     }, true);
   })();
 </script>
