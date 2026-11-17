@@ -1336,6 +1336,8 @@
     .ce-panel-label { font-size: 12px; color: var(--text-40); font-family: 'Poppins', sans-serif; white-space: nowrap; min-width: 68px; }
     .ce-panel-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
     .ce-chip { font-size: 12px; font-weight: 500; color: var(--text-80); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 3px 8px; font-family: 'Poppins', sans-serif; }
+    .ce-chip[data-node-id] { cursor: pointer; transition: background 150ms, border-color 150ms; }
+    .ce-chip[data-node-id]:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.22); }
     .ce-chip-note { font-size: 12px; color: var(--text-40); font-family: 'Poppins', sans-serif; }
     .ce-panel-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 2px; }
     /* Legend */
@@ -2137,14 +2139,10 @@
         t += 150;
       });
 
-      // Draw edges, wire clicks, then auto-select the outcome node
+      // Draw edges and wire clicks — no auto-selection
       setTimeout(() => {
         drawCeEdges();
         setupNodeClicks();
-        setTimeout(() => {
-          const outcome = document.querySelector('#ceGraph [data-ce-id="ransom"]');
-          if (outcome) outcome.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        }, 5 * 200 + 400);
       }, t + 80);
 
     }, 1400);
@@ -2200,6 +2198,8 @@
       actions: [{ text: 'Explain this', cls: 'btn-outline' }, { text: 'Isolate SERVER-02', cls: 'btn-filled' }],
     },
   };
+
+  const CE_LABEL_TO_ID = Object.fromEntries(Object.entries(CE_NODE_DATA).map(([id, d]) => [d.title, id]));
 
   const CE_EDGES_DEF = [
     { from: 'vpn',       to: 'cred',   type: 'cause',   label: 'stolen hash',  mx: 284, my: 85  },
@@ -2293,6 +2293,14 @@
     const panel = document.getElementById('cePanel');
     if (!panel) return;
 
+    // Chip click → navigate to that node
+    panel.addEventListener('click', e => {
+      const chip = e.target.closest('.ce-chip[data-node-id]');
+      if (!chip || !chip.dataset.nodeId) return;
+      const target = document.querySelector(`#ceGraph [data-ce-id="${chip.dataset.nodeId}"]`);
+      if (target) target.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    });
+
     // Click on SVG background → deselect
     document.getElementById('ceGraph').addEventListener('click', (e) => {
       if (e.target.closest('.ce-node-g')) return;
@@ -2333,11 +2341,11 @@
         // Build panel HTML
         const causedByRow = data.causedBy.length ? `<div class="ce-panel-row">
           <span class="ce-panel-label">Caused by</span>
-          <div class="ce-panel-chips">${data.causedBy.map(c => `<span class="ce-chip">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
+          <div class="ce-panel-chips">${data.causedBy.map(c => `<span class="ce-chip" data-node-id="${CE_LABEL_TO_ID[c.label] || ''}">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
         </div>` : '';
         const relatedRow = data.relatedTo.length ? `<div class="ce-panel-row">
           <span class="ce-panel-label">Related to</span>
-          <div class="ce-panel-chips">${data.relatedTo.map(c => `<span class="ce-chip">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
+          <div class="ce-panel-chips">${data.relatedTo.map(c => `<span class="ce-chip" data-node-id="${CE_LABEL_TO_ID[c.label] || ''}">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
         </div>` : '';
 
         panel.innerHTML = `
