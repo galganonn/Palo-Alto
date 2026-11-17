@@ -1770,12 +1770,12 @@
       investigationRow.style.display = '';
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      // Reveal sections sequentially, scroll to each as it appears
+      // Scroll to top of card once, then reveal sections
+      investigationRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const sections = investigationRow.querySelectorAll('[data-section]');
       sections.forEach((el, i) => {
         setTimeout(() => {
           el.classList.add('sec-visible');
-          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }, i * 550);
       });
     }, 1600);
