@@ -1293,6 +1293,11 @@
     }
     .ce-node-g { opacity: 0; }
     .ce-node-g.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
+    .ce-node-g.ce-visible.ce-ready { transition: opacity 200ms var(--ease-out); }
+    .ce-node-g.ce-dimmed { opacity: 0.18 !important; }
+    @media (hover: hover) and (pointer: fine) {
+      #ceGraph:not(.ce-has-selection):hover .ce-node-g.ce-ready:not(:hover) { opacity: 0.3; }
+    }
     /* Badges (HTML panel only) */
     .ce-badge { font-size: 10.5px; font-weight: 500; padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
     .ce-badge-change  { background: rgba(147,197,253,0.12); color: #93c5fd; }
@@ -2125,7 +2130,10 @@
       const nodes = row.querySelectorAll('.ce-node-g');
       let t = 0;
       nodes.forEach(node => {
-        setTimeout(() => node.classList.add('ce-visible'), t);
+        setTimeout(() => {
+          node.classList.add('ce-visible');
+          setTimeout(() => node.classList.add('ce-ready'), 360);
+        }, t);
         t += 150;
       });
 
@@ -2288,9 +2296,9 @@
     // Click on SVG background → deselect
     document.getElementById('ceGraph').addEventListener('click', (e) => {
       if (e.target.closest('.ce-node-g')) return;
+      document.getElementById('ceGraph').classList.remove('ce-has-selection');
       document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => {
-        n.classList.remove('ce-selected');
-        n.style.opacity = '';
+        n.classList.remove('ce-selected', 'ce-dimmed');
       });
       document.querySelectorAll('#ceEdges g[data-from]').forEach(eg => {
         eg.style.transition = 'opacity 200ms var(--ease-out)';
@@ -2306,12 +2314,13 @@
         if (!data) return;
 
         // Update selection + dim others
+        const graph = document.getElementById('ceGraph');
+        graph.classList.add('ce-has-selection');
         document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => {
           n.classList.remove('ce-selected');
-          n.style.transition = 'opacity 200ms var(--ease-out)';
-          n.style.opacity = '0.2';
+          n.classList.add('ce-dimmed');
         });
-        nodeEl.style.opacity = '1';
+        nodeEl.classList.remove('ce-dimmed');
         nodeEl.classList.add('ce-selected');
 
         // Dim unrelated edges
