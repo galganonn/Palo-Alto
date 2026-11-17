@@ -1009,7 +1009,7 @@
 
     .chat-input-bar {
       flex-shrink: 0;
-      padding: 0 24px 24px;
+      padding: 0 0 24px;
       position: relative;
       background: #1b1f49;
     }
@@ -1018,6 +1018,7 @@
       content: '';
       position: absolute;
       left: 0; right: 0;
+      z-index: 0;
       bottom: 100%;
       height: 90px;
       background: linear-gradient(to bottom, transparent, #1b1f49);
@@ -1258,7 +1259,7 @@
       </div>
 
       <!-- AI response -->
-      <div class="chat-row">
+      <div class="chat-row" id="investigationRow" style="display:none;">
         <div class="ai-row">
           <div class="ai-avatar">
             <img src="uploads/agent-avatar.png" alt="" aria-hidden="true" style="width:36px;height:36px;object-fit:cover;display:block;">
@@ -1268,7 +1269,7 @@
             <div class="ai-label">Cortex AI · Investigated 23 alerts across 2 hosts</div>
 
             <!-- ════ ONE GLASS CARD ════ -->
-            <div class="response-card">
+            <div class="response-card" id="responseCard">
 
               <!-- § Outer card header -->
               <div class="response-card-header">
@@ -1277,7 +1278,7 @@
               </div>
 
               <!-- § AI Conclusion (Figma 193-35905) -->
-              <div class="g1-ai-card">
+              <div class="g1-ai-card" data-section="summary">
                 <div class="ai-conclusion-row">
                   <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAOdEVYdFNvZnR3YXJlAEZpZ21hnrGWYwAABRhJREFUeAG9Vz1sHEUU/t7M7t6d7dgbQwBHCTksJEQDRypIk+0oguSrEILCRopEQ5EWCSlHkQ4pSYFEEclxQzrsNEiIIpcGKrDFjywklPgU5UeBKL747L293Znhzew5xAlyvFvkSXszNzv73ve+9zO7hJLSWL1Ul0SLQFI3pn/+l9c/aaGECJQUj6rzMKZBBiG0OX3s2oUjKCGlADRWF9lrRHZueEI8JoO4iRJSCoCPICIaPsrW7ZR09uwAaPJnjbVtLRsNrRV8raJouRWioBQG0Fi9UmfTkZ0z+y4EglnwSWN/1ZtBQSkMwNIPkuy95/4TWRAZKsgwppMIBaUwAC0rs4B03m+LTcIqAxg3xROxEIDG6modlgHmwTLgMHAdSiiMIsUEBuHZ1ZNREZ2FAPjwo5x6j0ufw+AeNzn9GCCkBC+afiEW9gwgWr4eBgPRIhPwv4AZ4DAwBKMNapRiEgkOYAuHTHf21rVje25K3tM2vPfD7UhXVTOJMUvVLDQJN51KlR3fDgNnPy9OYROHqIc69cLn4qxtfn77C24QV+joj53d9NPjC83F62FVjjaVwHFNaGrfhBnHOQsUlG8wCDLEIzz3ujDqJnvQwTG9huN0A2/RXRxUPcjYA/V9mIzDlMi2GtCClP4VOvFd538BfHDpPh8saJI0M1oisl7ZO9peQsMwT0oyCF8hrRj0axk2qzGMXMN49jvexx94lzp4Od2C6PFma3zAY0bcITlfUo61EVbJis5oQZBYpI++dWBo7lL3NNdUi1PZiRnC0kMQttAzodw8YxAq0BhUFDb2pdgYu4E31Pf43PyE6Y0YtFmBYe8xYGWZNSg4R4QtFFbMo8sZq9xmj1hhgB97IsMpYVuqtg1F543dwZC8j7uctNlvY+14cWxoBjLaC+AfeAkf0l+YvstU9ybZa2lvsmFY6v6jWOUajYOQq2d9DQYx73maOmREaG88bC5muJGLhNJhmljrjN4SxaARpB5e+20Sr9yMoGsroLEBL3K4pGLSTG5Zmsci7nhlH501i6PueYmYY3bmhaGG9XobIVkyDOVz3mCjIBXBY2oD9tSCsDB/Dd7BxK0YoX8bcozDUOOAByo3zvljRyPYd3cRtrlwYMicf1gFp+ZNXSfxDNMyRxn4RYPpZwCCvbbGPKZW2mRSwgHLzwDg4NYNvHlvGdOb1zCOfyBqCahiKXIPMSMaxCMrcxcJ1SZfLEH4l+mzr9eeKEMH5qypV4SeoVQ3haLIei5S2/d2brcn4fPJPby68ScOb3bwwtYdTJguG+zz4cCGmQny1boI1JIS6qpMq0t07tz6E2W4m7Raps5uc6Bli00eEUyjtllMOQvjaReHex1Mbd7Ggf4dhOl9Xnuw7lW2Luqauuxf+LK9m/6nAtgBBFgWAqFx2Zo/Opo9wFR8x3k/Gf+N/Vl3bUrFUe2bTzt70bvns6DVojUeFrYrxYJwFyduSgH6cgRxZQzdYKK1V+OFAOSSLdlfS/+jKjI+ExLpIxFVmGqtjQJSEIC3wk6v2xzYBsJpxk3PYxAVJP5I++hXJ/bsfWEAHAZr/GqegHkSWtHcPTPJoRCViygohV/JuAqWdiywce4YUBwGb2RfGwWlzGu5A2CG2WjPFsWloYTXPnFmuhD9pQDYMLDttg2BywUXBkJqxEWUkFIfJmy7/cg/TkQB6Y+2UUJKAWAGFtw34TAJjaSVk2f2F6a/NADblDgELfdlBLHmebU5lJR/AZMvKmjX0xUNAAAAAElFTkSuQmCC" class="ai-sparkle" alt="" aria-hidden="true">
                   <span class="ai-conclusion-label">AI conclusion</span>
