@@ -1199,99 +1199,90 @@
     .prompt-send-btn:focus-visible { outline: 2px solid var(--color-blue-light); outline-offset: 2px; }
     .prompt-send-btn:disabled { opacity: 0.35; cursor: default; }
 
-    /* ── Attack Path Visualization ───────────────────────────── */
-    .ap-wrap {
-      padding: 20px 20px 0;
-    }
-    .ap-flow {
+    /* ── Cause & Effect graph ────────────────────────────────── */
+    .ce-wrap { }
+    .ce-graph {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 0;
-      overflow-x: auto;
-      padding-bottom: 20px;
+      padding: 24px 20px 20px;
+      position: relative;
+      min-height: 180px;
     }
-    .ap-node {
-      flex-shrink: 0;
-      width: 148px;
-      padding: 11px 13px 12px;
-      border-radius: 10px;
-      border-left: 3px solid;
-      background: rgba(255,255,255,0.04);
+    .ce-col {
       display: flex;
       flex-direction: column;
-      gap: 3px;
-      opacity: 0;
-    }
-    .ap-node.ap-visible {
-      animation: item-fade-up 350ms var(--ease-out) both;
-    }
-    .ap-node--blue  { border-color: #4B9EFF; }
-    .ap-node--orange { border-color: #F97316; }
-    .ap-node--red {
-      border-color: var(--critical);
-      background: rgba(239,68,68,0.07);
-    }
-    .ap-cat {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.07em;
-      text-transform: uppercase; color: var(--text-50);
-      font-family: 'Poppins', sans-serif;
-    }
-    .ap-title {
-      font-size: 13px; font-weight: 600; color: var(--text-90);
-      font-family: 'Figtree', sans-serif; line-height: 1.25;
-    }
-    .ap-entity {
-      font-size: 11.5px; font-weight: 500; color: var(--text-60);
-      font-family: 'Poppins', sans-serif; margin-top: 1px;
-    }
-    .ap-time {
-      font-size: 11px; color: var(--text-40);
-      font-family: 'Poppins', sans-serif;
-    }
-    .ap-edge {
+      gap: 10px;
       flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      min-width: 36px;
-      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
     }
-    .ap-edge-delta {
-      font-size: 10.5px; font-weight: 500; color: var(--text-40);
-      font-family: 'Poppins', sans-serif;
+    .ce-col--outcome {
+      flex: 0 0 auto;
+      align-self: center;
+    }
+    .ce-lines {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: visible;
+    }
+    .ce-node {
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      padding: 10px 12px;
+      display: flex; flex-direction: column; gap: 5px;
+      cursor: pointer;
       opacity: 0;
-      transition: opacity 200ms var(--ease-out);
     }
-    .ap-edge-delta.ap-visible { opacity: 1; }
-    .ap-edge-line-wrap {
-      display: flex; align-items: center; width: 100%;
+    .ce-node.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
+    .ce-node--selected {
+      border-color: rgba(255,255,255,0.28) !important;
+      background: rgba(255,255,255,0.055) !important;
     }
-    .ap-edge-line {
-      flex: 1; height: 1.5px;
-      background: rgba(255,255,255,0.18);
-      transform: scaleX(0);
-      transform-origin: left center;
-      transition: transform 300ms var(--ease-out);
+    @media (hover: hover) and (pointer: fine) {
+      .ce-node:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); }
     }
-    .ap-edge-line.ap-visible { transform: scaleX(1); }
-    .ap-edge-arrow {
-      color: rgba(255,255,255,0.28);
-      font-size: 16px; line-height: 1; flex-shrink: 0;
-      opacity: 0;
-      transition: opacity 150ms var(--ease-out);
+    .ce-node-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+    .ce-node-title { font-size: 13px; font-weight: 600; color: var(--text-90); font-family: 'Figtree', sans-serif; }
+    .ce-node-sub { font-size: 11.5px; color: var(--text-50); font-family: 'Poppins', sans-serif; }
+    /* Badges */
+    .ce-badge { font-size: 10.5px; font-weight: 500; padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .ce-badge-change { background: rgba(255,255,255,0.08); color: var(--text-50); }
+    .ce-badge-ok { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .ce-badge-warning { background: rgba(251,191,36,0.15); color: #fbbf24; }
+    .ce-badge-critical { background: rgba(239,68,68,0.15); color: #f87171; }
+    /* Detail panel */
+    .ce-panel {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 16px 20px;
+      display: flex; flex-direction: column; gap: 10px;
+      opacity: 0; transition: opacity 300ms var(--ease-out);
     }
-    .ap-edge-arrow.ap-visible { opacity: 1; }
-    .ap-summary {
-      font-size: 13px; color: var(--text-60);
-      font-family: 'Poppins', sans-serif;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding: 14px 0 20px;
-      opacity: 0;
-      transition: opacity 300ms var(--ease-out);
+    .ce-panel.ce-visible { opacity: 1; }
+    .ce-panel-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .ce-panel-hdr-left { display: flex; flex-direction: column; gap: 2px; }
+    .ce-panel-title { font-size: 14px; font-weight: 600; color: var(--text-90); font-family: 'Figtree', sans-serif; }
+    .ce-panel-sub { font-size: 11.5px; color: var(--text-50); font-family: 'Poppins', sans-serif; }
+    .ce-panel-desc { font-size: 13px; color: var(--text-60); font-family: 'Poppins', sans-serif; margin: 0; }
+    .ce-panel-row { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .ce-panel-label { font-size: 12px; color: var(--text-40); font-family: 'Poppins', sans-serif; white-space: nowrap; min-width: 68px; }
+    .ce-panel-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+    .ce-chip { font-size: 12px; font-weight: 500; color: var(--text-80); background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 5px; padding: 3px 8px; font-family: 'Poppins', sans-serif; }
+    .ce-chip-note { font-size: 12px; color: var(--text-40); font-family: 'Poppins', sans-serif; }
+    .ce-panel-actions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 2px; }
+    /* Legend */
+    .ce-legend {
+      display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+      padding: 10px 20px 16px;
+      border-top: 1px solid rgba(255,255,255,0.06);
     }
-    .ap-summary strong { color: var(--text-80); font-weight: 600; }
-    .ap-summary.ap-visible { opacity: 1; }
+    .ce-legend-item {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11.5px; color: var(--text-40); font-family: 'Poppins', sans-serif;
+    }
   </style>
 </head>
 <body>
@@ -1787,66 +1778,107 @@
             <div class="ai-label">Cortex AI · Attack path analysis</div>
             <div class="response-card" id="attackPathCard">
               <div class="response-card-header">
-                <span class="rc-incident-name">Full attack chain</span>
-                <span class="bc-badge" style="background:rgba(239,68,68,0.15); color:#F87171; border-color:rgba(239,68,68,0.25);">4 stages · 11 min</span>
+                <span class="rc-incident-name">Why was SERVER-02 compromised?</span>
+                <span class="bc-badge" style="background:rgba(239,68,68,0.15); color:#F87171; border-color:rgba(239,68,68,0.25);">3 causes · 11 min</span>
               </div>
-              <div class="ap-wrap">
-                <div class="ap-flow">
-                  <!-- Node 1 -->
-                  <div class="ap-node ap-node--blue" data-ap-node="0">
-                    <span class="ap-cat">Initial Access</span>
-                    <span class="ap-title">VPN from Thailand</span>
-                    <span class="ap-entity">john.doe</span>
-                    <span class="ap-time">14:31</span>
-                  </div>
-                  <!-- Edge 1 -->
-                  <div class="ap-edge" data-ap-edge="0">
-                    <span class="ap-edge-delta">+4m</span>
-                    <div class="ap-edge-line-wrap">
-                      <div class="ap-edge-line"></div>
-                      <span class="ap-edge-arrow">›</span>
+
+              <!-- Cause & Effect graph -->
+              <div class="ce-wrap">
+                <div class="ce-graph" id="ceGraph">
+                  <!-- Causes column -->
+                  <div class="ce-col">
+                    <div class="ce-node" data-ce-id="vpn">
+                      <div class="ce-node-top">
+                        <span class="ce-node-title">VPN from Thailand</span>
+                        <span class="ce-badge ce-badge-change">access</span>
+                      </div>
+                      <span class="ce-node-sub">john.doe · 14:31</span>
+                    </div>
+                    <div class="ce-node" data-ce-id="nomfa">
+                      <div class="ce-node-top">
+                        <span class="ce-node-title">No MFA policy</span>
+                        <span class="ce-badge ce-badge-warning">△ Warning</span>
+                      </div>
+                      <span class="ce-node-sub">Auth bypass · policy</span>
+                    </div>
+                    <div class="ce-node" data-ce-id="stalecred">
+                      <div class="ce-node-top">
+                        <span class="ce-node-title">Stale credentials</span>
+                        <span class="ce-badge ce-badge-ok">✓ OK</span>
+                      </div>
+                      <span class="ce-node-sub">360-day password · r…</span>
                     </div>
                   </div>
-                  <!-- Node 2 -->
-                  <div class="ap-node ap-node--orange" data-ap-node="1">
-                    <span class="ap-cat">Execution</span>
-                    <span class="ap-title">Credential dump</span>
-                    <span class="ap-entity">WORKSTATION-14</span>
-                    <span class="ap-time">14:35</span>
-                  </div>
-                  <!-- Edge 2 -->
-                  <div class="ap-edge" data-ap-edge="1">
-                    <span class="ap-edge-delta">+3m</span>
-                    <div class="ap-edge-line-wrap">
-                      <div class="ap-edge-line"></div>
-                      <span class="ap-edge-arrow">›</span>
+
+                  <!-- SVG lines (drawn by JS) -->
+                  <svg class="ce-lines" id="ceLines" aria-hidden="true"></svg>
+
+                  <!-- Intermediaries column -->
+                  <div class="ce-col">
+                    <div class="ce-node" data-ce-id="cred">
+                      <div class="ce-node-top">
+                        <span class="ce-node-title">Credential dump</span>
+                        <span class="ce-badge ce-badge-warning">△ Warning</span>
+                      </div>
+                      <span class="ce-node-sub">WORKSTATION-14 · 14:35</span>
+                    </div>
+                    <div class="ce-node" data-ce-id="lateral">
+                      <div class="ce-node-top">
+                        <span class="ce-node-title">Lateral movement</span>
+                        <span class="ce-badge ce-badge-warning">△ Warning</span>
+                      </div>
+                      <span class="ce-node-sub">RDP to SERVER-02 · 14:38</span>
                     </div>
                   </div>
-                  <!-- Node 3 -->
-                  <div class="ap-node ap-node--orange" data-ap-node="2">
-                    <span class="ap-cat">Lateral Movement</span>
-                    <span class="ap-title">RDP to SERVER-02</span>
-                    <span class="ap-entity">SERVER-02</span>
-                    <span class="ap-time">14:38</span>
-                  </div>
-                  <!-- Edge 3 -->
-                  <div class="ap-edge" data-ap-edge="2">
-                    <span class="ap-edge-delta">+4m</span>
-                    <div class="ap-edge-line-wrap">
-                      <div class="ap-edge-line"></div>
-                      <span class="ap-edge-arrow">›</span>
+
+                  <!-- Outcome column -->
+                  <div class="ce-col ce-col--outcome">
+                    <div class="ce-node ce-node--selected" data-ce-id="ransom">
+                      <div class="ce-node-top">
+                        <span class="ce-node-title">Ransomware drop</span>
+                        <span class="ce-badge ce-badge-critical">● Critical</span>
+                      </div>
+                      <span class="ce-node-sub">lockbit_dropper · 14:42</span>
                     </div>
-                  </div>
-                  <!-- Node 4 (critical) -->
-                  <div class="ap-node ap-node--red" data-ap-node="3">
-                    <span class="ap-cat">Impact</span>
-                    <span class="ap-title">Ransomware drop</span>
-                    <span class="ap-entity">lockbit_dropper</span>
-                    <span class="ap-time">14:42</span>
                   </div>
                 </div>
-                <div class="ap-summary" data-ap-summary>
-                  Initial access to ransomware deployment in <strong>11 minutes</strong>. Recommend isolating SERVER-02 immediately.
+
+                <!-- Selected node detail panel -->
+                <div class="ce-panel" id="cePanel">
+                  <div class="ce-panel-header">
+                    <div class="ce-panel-hdr-left">
+                      <span class="ce-panel-title">Ransomware drop</span>
+                      <span class="ce-panel-sub">lockbit_dropper · SERVER-02 · 14:42 · outcome</span>
+                    </div>
+                    <span class="ce-badge ce-badge-critical">● Critical</span>
+                  </div>
+                  <p class="ce-panel-desc">≈11 min from initial access to payload execution on SERVER-02.</p>
+                  <div class="ce-panel-row">
+                    <span class="ce-panel-label">Caused by</span>
+                    <div class="ce-panel-chips">
+                      <span class="ce-chip">Credential dump</span><span class="ce-chip-note">stolen hash</span>
+                      <span class="ce-chip">Lateral movement</span><span class="ce-chip-note">RDP pivot</span>
+                    </div>
+                  </div>
+                  <div class="ce-panel-row">
+                    <span class="ce-panel-label">Related to</span>
+                    <div class="ce-panel-chips">
+                      <span class="ce-chip">Stale credentials</span><span class="ce-chip-note">No change</span>
+                    </div>
+                  </div>
+                  <div class="ce-panel-actions">
+                    <button class="btn-outline" style="font-size:12px; padding:6px 14px;">Explain this</button>
+                    <button class="btn-filled" style="font-size:12px; padding:6px 14px;">Isolate SERVER-02</button>
+                  </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="ce-legend">
+                  <span class="ce-legend-item"><svg width="20" height="8" viewBox="0 0 20 8"><line x1="0" y1="4" x2="14" y2="4" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M12,1 L17,4 L12,7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg> Causes</span>
+                  <span class="ce-legend-item"><svg width="20" height="8" viewBox="0 0 20 8"><line x1="0" y1="4" x2="20" y2="4" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="3 3"/></svg> Related</span>
+                  <span class="ce-legend-item" style="color:var(--success);">✓ OK</span>
+                  <span class="ce-legend-item" style="color:#fbbf24;">△ Warning</span>
+                  <span class="ce-legend-item" style="color:#f87171;">● Critical</span>
                 </div>
               </div>
             </div>
@@ -2025,60 +2057,116 @@
     if (attackPathRevealed) return;
     attackPathRevealed = true;
 
-    // Inject a temporary loading row
     const loadingEl = document.createElement('div');
     loadingEl.className = 'chat-row';
-    loadingEl.innerHTML = `
-      <div style="padding:0 24px;">
-        <div class="ai-thinking">
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
-      </div>`;
+    loadingEl.innerHTML = `<div style="padding:0 24px;"><div class="ai-thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
     chatArea.appendChild(loadingEl);
     chatArea.scrollTop = chatArea.scrollHeight;
 
     setTimeout(() => {
       loadingEl.remove();
-
       const row = document.getElementById('attackPathRow');
       row.style.display = '';
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      const nodes  = row.querySelectorAll('[data-ap-node]');
-      const edges  = row.querySelectorAll('[data-ap-edge]');
-      const summary = row.querySelector('[data-ap-summary]');
-
-      // Stagger: node0 → edge0-line → edge0-delta+arrow → node1 → …
-      const steps = [
-        () => nodes[0].classList.add('ap-visible'),
-        () => { edges[0].querySelector('.ap-edge-line').classList.add('ap-visible'); },
-        () => {
-          edges[0].querySelector('.ap-edge-delta').classList.add('ap-visible');
-          edges[0].querySelector('.ap-edge-arrow').classList.add('ap-visible');
-        },
-        () => nodes[1].classList.add('ap-visible'),
-        () => { edges[1].querySelector('.ap-edge-line').classList.add('ap-visible'); },
-        () => {
-          edges[1].querySelector('.ap-edge-delta').classList.add('ap-visible');
-          edges[1].querySelector('.ap-edge-arrow').classList.add('ap-visible');
-        },
-        () => nodes[2].classList.add('ap-visible'),
-        () => { edges[2].querySelector('.ap-edge-line').classList.add('ap-visible'); },
-        () => {
-          edges[2].querySelector('.ap-edge-delta').classList.add('ap-visible');
-          edges[2].querySelector('.ap-edge-arrow').classList.add('ap-visible');
-        },
-        () => nodes[3].classList.add('ap-visible'),
-        () => summary.classList.add('ap-visible'),
-      ];
-
-      const gaps = [0, 350, 160, 300, 350, 160, 300, 350, 160, 300, 350];
+      // Stagger nodes in
+      const nodes = row.querySelectorAll('.ce-node');
       let t = 0;
-      steps.forEach((fn, i) => {
-        t += gaps[i];
-        setTimeout(fn, t);
+      nodes.forEach(node => {
+        setTimeout(() => node.classList.add('ce-visible'), t);
+        t += 160;
       });
+
+      // Draw SVG lines after nodes have faded in
+      setTimeout(() => drawCeLines(row), t + 80);
+
+      // Reveal detail panel after lines finish drawing
+      setTimeout(() => {
+        const panel = row.querySelector('.ce-panel');
+        if (panel) panel.classList.add('ce-visible');
+      }, t + 80 + 5 * 220 + 200);
+
     }, 1400);
+  }
+
+  function drawCeLines(container) {
+    const graph = document.getElementById('ceGraph');
+    const svg   = document.getElementById('ceLines');
+    if (!graph || !svg) return;
+
+    const gr = graph.getBoundingClientRect();
+
+    function midRight(el) {
+      const r = el.getBoundingClientRect();
+      return { x: r.right - gr.left, y: (r.top + r.bottom) / 2 - gr.top };
+    }
+    function midLeft(el) {
+      const r = el.getBoundingClientRect();
+      return { x: r.left - gr.left, y: (r.top + r.bottom) / 2 - gr.top };
+    }
+    function byId(id) { return container.querySelector('[data-ce-id="' + id + '"]'); }
+
+    // Arrowhead marker
+    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    defs.innerHTML = `<marker id="ce-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1.5,1.5 L6,4 L1.5,6.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>`;
+    svg.appendChild(defs);
+
+    const edgeDefs = [
+      { from: 'vpn',       to: 'cred',    type: 'cause',   label: 'stolen hash' },
+      { from: 'nomfa',     to: 'cred',    type: 'cause',   label: 'no 2FA block' },
+      { from: 'cred',      to: 'lateral', type: 'cause',   label: '−3 min' },
+      { from: 'lateral',   to: 'ransom',  type: 'cause',   label: '−4 min' },
+      { from: 'stalecred', to: 'ransom',  type: 'related', label: 'No change' },
+    ];
+
+    edgeDefs.forEach((ed, i) => {
+      const p1 = midRight(byId(ed.from));
+      const p2 = midLeft(byId(ed.to));
+      const ctrl = (p2.x - p1.x) * 0.42;
+      const d = `M ${p1.x} ${p1.y} C ${p1.x + ctrl} ${p1.y} ${p2.x - ctrl} ${p2.y} ${p2.x} ${p2.y}`;
+
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', d);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke-width', '1.5');
+      path.setAttribute('marker-end', 'url(#ce-arr)');
+
+      if (ed.type === 'related') {
+        path.setAttribute('stroke', 'rgba(255,255,255,0.18)');
+        path.setAttribute('stroke-dasharray', '4 4');
+        path.style.opacity = '0';
+        path.style.transition = 'opacity 280ms var(--ease-out)';
+      } else {
+        path.setAttribute('stroke', 'rgba(255,255,255,0.25)');
+      }
+      svg.appendChild(path);
+
+      // Animate
+      if (ed.type === 'cause') {
+        const len = path.getTotalLength();
+        path.style.strokeDasharray = len;
+        path.style.strokeDashoffset = len;
+        path.style.transition = 'stroke-dashoffset 380ms var(--ease-out)';
+        setTimeout(() => { path.style.strokeDashoffset = '0'; }, i * 200);
+      } else {
+        setTimeout(() => { path.style.opacity = '1'; }, i * 200);
+      }
+
+      // Edge label
+      const mp = path.getPointAtLength(path.getTotalLength() * 0.5);
+      const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lbl.setAttribute('x', mp.x);
+      lbl.setAttribute('y', mp.y - 7);
+      lbl.setAttribute('text-anchor', 'middle');
+      lbl.setAttribute('font-size', '10');
+      lbl.setAttribute('font-family', 'Poppins, sans-serif');
+      lbl.setAttribute('fill', 'rgba(255,255,255,0.3)');
+      lbl.textContent = ed.label;
+      lbl.style.opacity = '0';
+      lbl.style.transition = 'opacity 200ms var(--ease-out)';
+      svg.appendChild(lbl);
+      setTimeout(() => { lbl.style.opacity = '1'; }, i * 200 + 300);
+    });
   }
 
   document.getElementById('chatSendBtn').addEventListener('click', function() {
