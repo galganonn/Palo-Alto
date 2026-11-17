@@ -1596,10 +1596,6 @@
               </svg>
             </button>
             <span class="prompt-context-chip" id="contextChip">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="6" cy="6" r="4.5"/>
-                <line x1="6" y1="4" x2="6" y2="6.5"/><circle cx="6" cy="8" r="0.5" fill="currentColor" stroke="none"/>
-              </svg>
               INC-2024-0892
               <button class="prompt-chip-remove" aria-label="Remove context" onclick="document.getElementById('contextChip').style.display='none'">
                 <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
@@ -1689,21 +1685,23 @@
 
     if (!withSkeleton) return;
 
-    // Show skeletons, hide real items
+    // Replace each real item with a skeleton in the same position
     const realItems = Array.from(list.querySelectorAll('.chp-item'));
-    realItems.forEach(el => el.style.visibility = 'hidden');
-    const skels = [0.7, 0.55, 0.65, 0.5, 0.6].map(() => {
+    const skels = realItems.map(item => {
       const s = document.createElement('div');
       s.className = 'chp-skeleton-item';
       s.innerHTML = '<div class="chp-skel-line chp-skel-title"></div>'
                   + '<div class="chp-skel-line chp-skel-desc"></div>';
-      list.appendChild(s);
-      return s;
+      list.insertBefore(s, item);
+      item.style.display = 'none';
+      return { skel: s, item };
     });
 
     setTimeout(() => {
-      skels.forEach(s => s.remove());
-      realItems.forEach(el => el.style.visibility = '');
+      skels.forEach(({ skel, item }) => {
+        skel.remove();
+        item.style.display = '';
+      });
     }, 1200);
   }
 
