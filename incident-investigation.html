@@ -973,6 +973,39 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
+    /* ── Investigation build animation ── */
+    [data-section] {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    [data-section].sec-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Loading indicator */
+    .investigation-loading {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0 16px;
+      font-size: 15px; font-family: 'Figtree', sans-serif;
+      color: var(--text-50);
+    }
+    .investigation-loading .ld-dots {
+      display: flex; gap: 4px; align-items: center;
+    }
+    .investigation-loading .ld-dots span {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: #6b5fe3; opacity: 0.4;
+      animation: ld-bounce 1.2s infinite ease-in-out;
+    }
+    .investigation-loading .ld-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .investigation-loading .ld-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes ld-bounce {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.3; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
     /* ── Skeleton loading ── */
     @keyframes chp-shimmer {
       0%   { background-position: -260px 0; }
@@ -1259,6 +1292,21 @@
       </div>
 
       <!-- AI response -->
+      <!-- Loading state -->
+      <div class="chat-row" id="loadingRow" style="display:none;">
+        <div class="ai-row">
+          <div class="ai-avatar">
+            <img src="uploads/agent-avatar.png" alt="" aria-hidden="true" style="width:36px;height:36px;object-fit:cover;display:block;">
+          </div>
+          <div class="ai-content">
+            <div class="investigation-loading">
+              <span>Investigating incident</span>
+              <div class="ld-dots"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="chat-row" id="investigationRow" style="display:none;">
         <div class="ai-row">
           <div class="ai-avatar">
@@ -1305,7 +1353,7 @@
               </div><!-- /g1-ai-card -->
 
               <!-- § SummaryCard facts -->
-              <div class="g1-inner-card">
+              <div class="g1-inner-card" data-section="facts">
               <div class="card-facts">
                 <div class="facts-grid">
                   <div class="fact-cell">
@@ -1424,7 +1472,7 @@
               </div><!-- /g1-inner-card SummaryCard + Timeline -->
 
               <!-- § Response actions -->
-              <div class="g1-inner-card g1-inner-card-actions">
+              <div class="g1-inner-card g1-inner-card-actions" data-section="actions">
               <div class="card-actions">
                 <div class="section-label">Recommended actions</div>
                 <div class="actions-list">
@@ -1699,6 +1747,37 @@
     else { openPanel(true); }
   });
 
+  // Sequential card build animation
+  let cardRevealed = false;
+  function revealCard() {
+    if (cardRevealed) return;
+    cardRevealed = true;
+
+    const loadingRow = document.getElementById('loadingRow');
+    const investigationRow = document.getElementById('investigationRow');
+    const chatArea = document.getElementById('chatArea');
+
+    // Show loading
+    loadingRow.style.display = '';
+    chatArea.scrollTop = chatArea.scrollHeight;
+
+    // After 1.6s — hide loading, show card row
+    setTimeout(() => {
+      loadingRow.style.display = 'none';
+      investigationRow.style.display = '';
+      chatArea.scrollTop = chatArea.scrollHeight;
+
+      // Reveal sections sequentially
+      const sections = investigationRow.querySelectorAll('[data-section]');
+      sections.forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add('sec-visible');
+          chatArea.scrollTop = chatArea.scrollHeight;
+        }, i * 400);
+      });
+    }, 1600);
+  }
+
   document.getElementById('chatSendBtn').addEventListener('click', function() {
     const ta = document.getElementById('prompt-input');
     const text = ta.value.trim();
@@ -1707,21 +1786,15 @@
     const list = document.getElementById('chpList');
     const chatArea = document.getElementById('chatArea');
 
-    // Open panel with skeleton on first send
-    openPanel(true);
-
     // Add user message to chat
     const userRow = document.createElement('div');
     userRow.className = 'chat-row';
     userRow.innerHTML = '<div class="user-row"><div class="user-msg">' + text.replace(/</g,'&lt;') + '</div></div>';
     chatArea.appendChild(userRow);
-
-    // Add AI thinking indicator
-    const aiRow = document.createElement('div');
-    aiRow.className = 'chat-row';
-    aiRow.innerHTML = '<div class="ai-text-bubble"><div class="ai-text-body" style="opacity:0.5;font-style:italic;">Thinking…</div></div>';
-    chatArea.appendChild(aiRow);
     chatArea.scrollTop = chatArea.scrollHeight;
+
+    // Open history panel with skeleton
+    openPanel(true);
 
     // Add to history panel
     list.querySelectorAll('.chp-item').forEach(el => el.classList.remove('is-active'));
@@ -1730,6 +1803,9 @@
     newItem.innerHTML = '<div class="chp-item-title">' + (text.length > 32 ? text.slice(0,32)+'…' : text) + '</div>'
       + '<div class="chp-item-desc">Just now</div>';
     list.prepend(newItem);
+
+    // Trigger card build
+    revealCard();
 
     // Reset textarea
     ta.value = '';
