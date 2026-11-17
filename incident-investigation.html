@@ -2137,14 +2137,10 @@
         t += 150;
       });
 
-      // Draw edges, wire clicks, then auto-select the outcome node
+      // Draw edges and wire clicks — no auto-selection
       setTimeout(() => {
         drawCeEdges();
         setupNodeClicks();
-        setTimeout(() => {
-          const outcome = document.querySelector('#ceGraph [data-ce-id="ransom"]');
-          if (outcome) outcome.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-        }, 5 * 200 + 400);
       }, t + 80);
 
     }, 1400);
