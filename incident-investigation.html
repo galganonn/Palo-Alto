@@ -1079,7 +1079,8 @@
     .suggested-pill svg { flex-shrink: 0; }
 
     /* ── PROMPT BAR (new style) ── */
-    .prompt-wrap { padding: 0 160px 0; }
+    .prompt-wrap { padding: 0 160px 0; display: flex; gap: 12px; }
+    .prompt-spacer { width: 36px; flex-shrink: 0; }
     .prompt-box {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
@@ -1615,6 +1616,7 @@
     <!-- Input -->
     <div class="chat-input-bar">
       <div class="prompt-wrap">
+        <div class="prompt-spacer"></div>
         <div class="prompt-box">
           <div class="prompt-text-area">
             <textarea class="prompt-textarea" id="prompt-input" rows="1" placeholder="Isolate WORKSTATION-14 and reset john.doe credentials?" oninput="autoResize(this);updateSendBtn(this)"></textarea>
