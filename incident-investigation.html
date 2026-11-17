@@ -1295,10 +1295,11 @@
     .ce-node-g.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
     /* Badges (HTML panel only) */
     .ce-badge { font-size: 10.5px; font-weight: 500; padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
-    .ce-badge-change { background: rgba(255,255,255,0.08); color: var(--text-50); }
-    .ce-badge-ok { background: rgba(255,255,255,0.08); color: var(--text-50); }
-    .ce-badge-warning { background: rgba(255,255,255,0.08); color: var(--text-50); }
-    .ce-badge-critical { background: rgba(255,255,255,0.08); color: var(--text-50); }
+    .ce-badge-change  { background: rgba(147,197,253,0.12); color: #93c5fd; }
+    .ce-badge-ok      { background: rgba(74,222,128,0.12);  color: #4ade80; }
+    .ce-badge-warning { background: rgba(251,191,36,0.12);  color: #fbbf24; }
+    .ce-badge-critical{ background: rgba(239,68,68,0.15);   color: #f87171; }
+    .ce-node-g[data-ce-id="ransom"] .ce-node-rect { stroke: rgba(239,68,68,0.6) !important; }
     /* Detail panel */
     .ce-panel {
       display: flex; flex-direction: column; gap: 10px;
@@ -1868,8 +1869,7 @@
                       <rect class="ce-node-rect" x="24" y="24" width="180" height="76" rx="8"/>
                       <text x="36" y="43" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">VPN from Thailand</text>
                       <text x="36" y="57" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">john.doe · 14:31</text>
-                      <rect x="36" y="72" width="51" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                      <text x="62" y="85" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Poppins,sans-serif" text-anchor="middle">access</text>
+                      <text x="36" y="85" font-size="10" fill="#93c5fd" font-family="Poppins,sans-serif">access</text>
                     </g>
 
                     <!-- col0 row1: No MFA policy -->
@@ -1877,8 +1877,7 @@
                       <rect class="ce-node-rect" x="24" y="116" width="180" height="76" rx="8"/>
                       <text x="36" y="135" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">No MFA policy</text>
                       <text x="36" y="149" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">Auth bypass · policy</text>
-                      <rect x="36" y="164" width="66" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                      <text x="69" y="177" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                      <text x="36" y="177" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif">△ Warning</text>
                     </g>
 
                     <!-- col0 row2: Stale credentials -->
@@ -1886,8 +1885,7 @@
                       <rect class="ce-node-rect" x="24" y="208" width="180" height="76" rx="8"/>
                       <text x="36" y="227" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Stale credentials</text>
                       <text x="36" y="241" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">360-day password</text>
-                      <rect x="36" y="256" width="42" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                      <text x="57" y="269" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Poppins,sans-serif" text-anchor="middle">✓ OK</text>
+                      <text x="36" y="269" font-size="10" fill="#4ade80" font-family="Poppins,sans-serif">✓ OK</text>
                     </g>
 
                     <!-- col1 row0: Credential dump -->
@@ -1895,8 +1893,7 @@
                       <rect class="ce-node-rect" x="364" y="70" width="180" height="76" rx="8"/>
                       <text x="376" y="89" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Credential dump</text>
                       <text x="376" y="103" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">WORKSTATION-14 · 14:35</text>
-                      <rect x="376" y="118" width="64" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                      <text x="408" y="131" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                      <text x="376" y="131" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif">△ Warning</text>
                     </g>
 
                     <!-- col1 row1: Lateral movement -->
@@ -1904,8 +1901,7 @@
                       <rect class="ce-node-rect" x="364" y="162" width="180" height="76" rx="8"/>
                       <text x="376" y="181" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Lateral movement</text>
                       <text x="376" y="195" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">RDP to SERVER-02 · 14:38</text>
-                      <rect x="376" y="210" width="64" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                      <text x="408" y="223" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                      <text x="376" y="223" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif">△ Warning</text>
                     </g>
 
                     <!-- col2 row0: Ransomware drop (outcome) -->
@@ -1913,8 +1909,7 @@
                       <rect class="ce-node-rect" x="704" y="116" width="180" height="76" rx="8"/>
                       <text x="716" y="135" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Ransomware drop</text>
                       <text x="716" y="149" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">lockbit_dropper · 14:42</text>
-                      <rect x="716" y="164" width="62" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                      <text x="747" y="177" font-size="10" fill="rgba(255,255,255,0.45)" font-family="Poppins,sans-serif" text-anchor="middle">● Critical</text>
+                      <text x="716" y="177" font-size="10" fill="#f87171" font-family="Poppins,sans-serif">● Critical</text>
                     </g>
                   </svg>
                 </div>
