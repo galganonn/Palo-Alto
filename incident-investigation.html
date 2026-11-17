@@ -706,18 +706,14 @@
 
     .ra-execute {
       flex-shrink: 0;
-      display: inline-flex; align-items: center; gap: 6px;
-      height: 32px; padding: 0 12px; border-radius: var(--r-8);
-      font-size: 16px; font-weight: 400; font-family: 'Figtree', sans-serif;
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; padding: 0; border-radius: var(--r-8);
       background: rgba(255,255,255,0.8);
       color: #2B1A98;
       border: 1px solid transparent; cursor: pointer;
       transition: opacity 0.15s, background 0.2s, border-color 0.2s;
     }
-    .ra-execute-label {
-      color: #2B1A98;
-      font-size: 16px; font-weight: 400; font-family: 'Figtree', sans-serif;
-    }
+    .ra-execute-label { display: none; }
     .ra-execute:hover:not(:disabled) { opacity: 0.9; }
     .ra-execute:focus-visible { outline: 2px solid rgba(255,255,255,0.6); outline-offset: 2px; }
 
@@ -745,10 +741,7 @@
       background: rgba(43,176,118,0.15);
       border-color: rgba(43,176,118,0.3);
     }
-    .ra-execute.is-done .ra-execute-icon { display: none; }
-    .ra-execute.is-done .ra-execute-label {
-      color: #2BB076;
-    }
+    .ra-execute.is-done .ra-execute-icon { stroke: #2BB076; }
 
     .ra-warn {
       display: flex; align-items: flex-start; gap: 5px;
@@ -1202,7 +1195,7 @@
               <!-- § Response actions -->
               <div class="g1-inner-card g1-inner-card-actions">
               <div class="card-actions">
-                <div class="section-label">Response actions</div>
+                <div class="section-label">Recommended actions</div>
                 <div class="actions-list">
 
                   <!-- Action 1: Isolate host -->
@@ -1218,7 +1211,7 @@
                           <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Isolate host">Modify</button>
                           <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Isolate host">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
+                            <svg class="ra-execute-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2B1A98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3.5 3.5 5.5-6"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
                           <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
@@ -1254,7 +1247,7 @@
                           <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Reset credentials">Modify</button>
                           <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Reset credentials">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
+                            <svg class="ra-execute-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2B1A98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3.5 3.5 5.5-6"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
                           <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
@@ -1290,7 +1283,7 @@
                           <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Block hash org-wide">Modify</button>
                           <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Block hash org-wide">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
+                            <svg class="ra-execute-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2B1A98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3.5 3.5 5.5-6"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
                           <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
