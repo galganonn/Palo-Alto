@@ -1,0 +1,268 @@
+/*
+ * monday.com Seller Concept — Design Tokens
+ * Extracted from 4 Figma screens (nodes 905-3248, 905-2399, 905-3496, 636-29915)
+ * Dark mode · v2
+ */
+
+:root {
+
+  /* ══════════════════════════════════════
+     BACKGROUND & STRUCTURE
+  ══════════════════════════════════════ */
+
+  --bg-gradient: linear-gradient(154.22deg, #0F1124 5.326%, #272E70 95.582%);
+  --bg-dark-end: #0F1124;
+  --bg-blue-end: #272E70;
+
+  --nav-bg: rgba(0, 0, 0, 0.2);
+  --nav-border: rgba(255, 255, 255, 0.1);
+  --nav-divider: #222663;
+  --page-border: #3E4688;
+
+
+  /* ══════════════════════════════════════
+     TEXT — Opacity hierarchy
+  ══════════════════════════════════════ */
+
+  --text-100: #ffffff;
+  --text-90: rgba(255, 255, 255, 0.9);   /* event/action text */
+  --text-80: rgba(255, 255, 255, 0.8);   /* headings, badge text */
+  --text-70: rgba(255, 255, 255, 0.7);   /* body text */
+  --text-50: rgba(255, 255, 255, 0.5);   /* timestamps */
+  --text-label: #C9C9C9;                 /* micro labels (Deal value, etc.) */
+  --text-muted: #8A8AA0;                 /* agent names, section subtitles */
+  --text-inactive: #B6B6B8;             /* inactive tab text */
+
+
+  /* ══════════════════════════════════════
+     ACCENT COLORS
+  ══════════════════════════════════════ */
+
+  --color-blue: #0073EA;                 /* monday.com primary — links, CTAs */
+  --color-blue-light: #95BBF2;           /* medium confidence text */
+  --color-green: #2BB076;                /* success, high confidence, positive delta */
+  --color-orange: #FFA07A;              /* low confidence, warning */
+  --color-ai-purple: #DED4FC;           /* AI suggested text */
+  --color-ai-border: #8181FF;           /* AI card border / gradient end */
+
+
+  /* ══════════════════════════════════════
+     AI CONFIDENCE GRADIENT
+  ══════════════════════════════════════ */
+
+  --ai-gradient: linear-gradient(-89.99deg, #33D58E 0%, #33DBDB 48%, #8181FF 100%);
+
+
+  /* ══════════════════════════════════════
+     BADGE BACKGROUNDS — Confidence system
+     ≥90% → high (green)
+     80–89% → medium (blue)
+     <80%  → low (orange)
+  ══════════════════════════════════════ */
+
+  --badge-high-bg: rgba(0, 201, 80, 0.2);
+  --badge-high-text: #2BB076;
+
+  --badge-medium-bg: rgba(0, 115, 234, 0.2);
+  --badge-medium-text: #95BBF2;
+
+  --badge-low-bg: rgba(181, 77, 35, 0.5);
+  --badge-low-bg-alt: rgba(240, 177, 0, 0.2);   /* amber variant */
+  --badge-low-text: #FFA07A;
+
+  --badge-source-bg: rgba(255, 255, 255, 0.1);
+  --badge-source-text: rgba(255, 255, 255, 0.8);
+
+  --badge-day-bg: rgba(255, 255, 255, 0.1);
+  --badge-day-text: rgba(255, 255, 255, 0.8);
+
+
+  /* ══════════════════════════════════════
+     CARD SURFACES
+  ══════════════════════════════════════ */
+
+  /* Primary glassmorphism card */
+  --glass-bg: rgba(99, 99, 99, 0.3);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-blur: blur(50px);
+  --glass-blend: luminosity;
+
+  /* Subtle card (activity feed, no blur) */
+  --subtle-bg: rgba(255, 255, 255, 0.05);
+  --subtle-border: rgba(255, 255, 255, 0.1);
+
+  /* Context / company chip */
+  --chip-bg: rgba(31, 21, 51, 0.5);
+  --chip-shadow: inset 0px 2px 6px 0px rgba(39, 39, 39, 0.4);
+
+  /* Side nav icon button */
+  --icon-btn-bg: #181B2A;
+  --icon-btn-bg-active: #FFFFFF;
+  --icon-btn-border: #2E3141;
+
+
+  /* ══════════════════════════════════════
+     BUTTONS
+  ══════════════════════════════════════ */
+
+  /* Glass pill button (top corners nav) */
+  --glass-btn-bg: rgba(99, 99, 99, 0.3);
+  --glass-btn-border: rgba(255, 255, 255, 0.4);
+  --glass-btn-radius: 16px;
+
+  /* Secondary button */
+  --sec-btn-bg: rgba(255, 255, 255, 0.1);
+  --sec-btn-border: rgba(195, 198, 212, 0.3);
+  --sec-btn-height: 32px;
+  --sec-btn-radius: 8px;
+
+
+  /* ══════════════════════════════════════
+     TAB SYSTEM
+  ══════════════════════════════════════ */
+
+  --tab-container-bg: rgba(255, 255, 255, 0.05);
+  --tab-container-border: rgba(255, 255, 255, 0.1);
+  --tab-container-radius: 14px;
+  --tab-active-bg: #FFFFFF;
+  --tab-active-text: #000000;
+  --tab-active-radius: 9px;
+  --tab-inactive-text: #B6B6B8;
+
+
+  /* ══════════════════════════════════════
+     PROGRESS BARS
+  ══════════════════════════════════════ */
+
+  --progress-track-bg: rgba(255, 255, 255, 0.1);
+  --progress-track-height: 8px;
+  --progress-green: linear-gradient(to right, #00C950, #008236);
+  --progress-blue: linear-gradient(to right, #0073EA, #155DFC);
+
+
+  /* ══════════════════════════════════════
+     BORDER RADIUS SCALE
+  ══════════════════════════════════════ */
+
+  --r-4: 4px;      /* micro */
+  --r-8: 8px;      /* buttons, badges, icon buttons */
+  --r-9: 9px;      /* active tab pill */
+  --r-12: 12px;    /* avatar thumbnails, agent frames */
+  --r-14: 14px;    /* tab list container */
+  --r-16: 16px;    /* glass pill buttons, subtle cards */
+  --r-24: 24px;    /* main cards, glassmorphism panels */
+  --r-full: 999px; /* pills, context chips, progress bars */
+
+
+  /* ══════════════════════════════════════
+     SPACING BASE UNITS
+  ══════════════════════════════════════ */
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+}
+
+
+/* ══════════════════════════════════════
+   TYPOGRAPHY
+   Fonts: Poppins (display/numbers) + Figtree (body/UI)
+   Google Fonts import:
+   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Figtree:wght@400;500;600&display=swap');
+══════════════════════════════════════ */
+
+/*
+  Display numbers large   → Poppins 400  32px / lh:auto  / ls:-0.16px
+  KPI numbers             → Poppins 500  24px / lh:24px  / ls:-0.12px
+  Page title              → Poppins 500  20px / lh:26px  / ls:-0.10px
+  Section / card heading  → Poppins 500  18px / lh:26px  / ls:-0.09px
+
+  Item heading            → Figtree 600  16px / lh:22px
+  Event action text       → Figtree 400  16px / color: var(--text-90)
+  Body text               → Figtree 400  16px / color: var(--text-70)
+  Muted subtitle          → Figtree 400  16px / color: var(--text-muted)
+  Agent name              → Figtree 500  16px / color: var(--text-muted)
+  Secondary body          → Figtree 400  14px / lh:20px
+  Timestamp               → Figtree 400  14px / color: var(--text-50)
+  Action link             → Poppins 500  14px / color: var(--color-blue)
+  AI suggested text       → Figtree 400  14px / color: var(--color-ai-purple)
+  Badge / label text      → Poppins 500  12px
+  Micro label             → Figtree 400  12px / lh:16px  / color: var(--text-label)
+*/
+
+
+/* ══════════════════════════════════════
+   COMPONENT HELPERS
+══════════════════════════════════════ */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  mix-blend-mode: var(--glass-blend);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-24);
+}
+
+.subtle-card {
+  background: var(--subtle-bg);
+  border: 1px solid var(--subtle-border);
+  border-radius: var(--r-16);
+}
+
+.context-chip {
+  background: var(--chip-bg);
+  border-radius: var(--r-full);
+  padding: 6px 12px 6px 8px;
+  box-shadow: var(--chip-shadow);
+}
+
+.tab-container {
+  background: var(--tab-container-bg);
+  border: 1px solid var(--tab-container-border);
+  border-radius: var(--tab-container-radius);
+  padding: 2px;
+  display: inline-flex;
+  gap: 2px;
+}
+
+.tab-active {
+  background: var(--tab-active-bg);
+  color: var(--tab-active-text);
+  border-radius: var(--tab-active-radius);
+  padding: 5px 13px;
+}
+
+.tab-inactive {
+  color: var(--tab-inactive-text);
+  padding: 5px 13px;
+}
+
+.progress-track {
+  background: var(--progress-track-bg);
+  border-radius: var(--r-full);
+  height: var(--progress-track-height);
+  overflow: hidden;
+}
+
+.progress-fill-green { background: var(--progress-green); height: 100%; border-radius: var(--r-full); }
+.progress-fill-blue  { background: var(--progress-blue);  height: 100%; border-radius: var(--r-full); }
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: var(--r-8);
+  font-family: 'Poppins', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.badge-high   { background: var(--badge-high-bg);   color: var(--badge-high-text); }
+.badge-medium { background: var(--badge-medium-bg); color: var(--badge-medium-text); }
+.badge-low    { background: var(--badge-low-bg);    color: var(--badge-low-text); }
+.badge-source { background: var(--badge-source-bg); color: var(--badge-source-text); }
