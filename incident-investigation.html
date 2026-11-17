@@ -1199,56 +1199,34 @@
     .prompt-send-btn:focus-visible { outline: 2px solid var(--color-blue-light); outline-offset: 2px; }
     .prompt-send-btn:disabled { opacity: 0.35; cursor: default; }
 
-    /* ── Cause & Effect graph ────────────────────────────────── */
-    .ce-wrap { }
-    .ce-graph {
-      display: flex;
-      align-items: flex-start;
-      gap: 0;
-      padding: 24px 20px 20px;
-      position: relative;
-      min-height: 180px;
+    /* ── Cause & Effect graph (SVG-based) ──────────────────── */
+    .ce-wrap {}
+    .ce-svg-wrap {
+      padding: 20px 20px 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
-    .ce-col {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      flex: 1;
-      position: relative;
-      z-index: 1;
-    }
-    .ce-col--outcome {
-      flex: 0 0 auto;
-      align-self: center;
-    }
-    .ce-lines {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      overflow: visible;
-    }
-    .ce-node {
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      padding: 10px 12px;
-      display: flex; flex-direction: column; gap: 5px;
-      cursor: pointer;
-      opacity: 0;
-    }
-    .ce-node.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
-    .ce-node--selected {
-      border-color: rgba(255,255,255,0.28) !important;
-      background: rgba(255,255,255,0.055) !important;
+    .ce-svg-graph { display: block; width: 100%; max-width: 100%; height: auto; }
+    .ce-node-g { cursor: pointer; }
+    .ce-node-g .ce-node-rect {
+      fill: rgba(255,255,255,0.03);
+      stroke: rgba(255,255,255,0.1);
+      stroke-width: 1;
+      transition: stroke 180ms var(--ease-out), fill 180ms var(--ease-out);
     }
     @media (hover: hover) and (pointer: fine) {
-      .ce-node:hover { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); }
+      .ce-node-g:hover .ce-node-rect {
+        fill: rgba(255,255,255,0.055);
+        stroke: rgba(255,255,255,0.2);
+      }
     }
-    .ce-node-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-    .ce-node-title { font-size: 13px; font-weight: 600; color: var(--text-90); font-family: 'Figtree', sans-serif; }
-    .ce-node-sub { font-size: 11.5px; color: var(--text-50); font-family: 'Poppins', sans-serif; }
-    /* Badges */
+    .ce-node-g.ce-selected .ce-node-rect {
+      fill: rgba(255,255,255,0.06) !important;
+      stroke: rgba(255,255,255,0.35) !important;
+    }
+    .ce-node-g { opacity: 0; }
+    .ce-node-g.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
+    /* Badges (HTML panel only) */
     .ce-badge { font-size: 10.5px; font-weight: 500; padding: 2px 6px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
     .ce-badge-change { background: rgba(255,255,255,0.08); color: var(--text-50); }
     .ce-badge-ok { background: rgba(34,197,94,0.15); color: #4ade80; }
@@ -1782,65 +1760,72 @@
                 <span class="bc-badge" style="background:rgba(239,68,68,0.15); color:#F87171; border-color:rgba(239,68,68,0.25);">3 causes · 11 min</span>
               </div>
 
-              <!-- Cause & Effect graph -->
+              <!-- Cause & Effect graph (SVG canvas) -->
               <div class="ce-wrap">
-                <div class="ce-graph" id="ceGraph">
-                  <!-- Causes column -->
-                  <div class="ce-col">
-                    <div class="ce-node" data-ce-id="vpn">
-                      <div class="ce-node-top">
-                        <span class="ce-node-title">VPN from Thailand</span>
-                        <span class="ce-badge ce-badge-change">access</span>
-                      </div>
-                      <span class="ce-node-sub">john.doe · 14:31</span>
-                    </div>
-                    <div class="ce-node" data-ce-id="nomfa">
-                      <div class="ce-node-top">
-                        <span class="ce-node-title">No MFA policy</span>
-                        <span class="ce-badge ce-badge-warning">△ Warning</span>
-                      </div>
-                      <span class="ce-node-sub">Auth bypass · policy</span>
-                    </div>
-                    <div class="ce-node" data-ce-id="stalecred">
-                      <div class="ce-node-top">
-                        <span class="ce-node-title">Stale credentials</span>
-                        <span class="ce-badge ce-badge-ok">✓ OK</span>
-                      </div>
-                      <span class="ce-node-sub">360-day password · r…</span>
-                    </div>
-                  </div>
+                <div class="ce-svg-wrap">
+                  <svg id="ceGraph" class="ce-svg-graph" viewBox="0 0 908 232" width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Attack chain graph">
+                    <defs>
+                      <marker id="ce-arr" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
+                        <path d="M0,0.5 L8,4 L0,7.5 Z" fill="rgba(255,255,255,0.4)"/>
+                      </marker>
+                    </defs>
+                    <!-- Edges drawn by JS -->
+                    <g id="ceEdges"></g>
 
-                  <!-- SVG lines (drawn by JS) -->
-                  <svg class="ce-lines" id="ceLines" aria-hidden="true"></svg>
+                    <!-- col0 row0: VPN from Thailand -->
+                    <g class="ce-node-g" data-ce-id="vpn">
+                      <rect class="ce-node-rect" x="24" y="24" width="180" height="52" rx="8"/>
+                      <text x="36" y="45" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">VPN from Thailand</text>
+                      <text x="36" y="62" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">john.doe · 14:31</text>
+                      <rect x="145" y="41" width="51" height="18" rx="9" fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                      <text x="170" y="54" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif" text-anchor="middle">access</text>
+                    </g>
 
-                  <!-- Intermediaries column -->
-                  <div class="ce-col">
-                    <div class="ce-node" data-ce-id="cred">
-                      <div class="ce-node-top">
-                        <span class="ce-node-title">Credential dump</span>
-                        <span class="ce-badge ce-badge-warning">△ Warning</span>
-                      </div>
-                      <span class="ce-node-sub">WORKSTATION-14 · 14:35</span>
-                    </div>
-                    <div class="ce-node" data-ce-id="lateral">
-                      <div class="ce-node-top">
-                        <span class="ce-node-title">Lateral movement</span>
-                        <span class="ce-badge ce-badge-warning">△ Warning</span>
-                      </div>
-                      <span class="ce-node-sub">RDP to SERVER-02 · 14:38</span>
-                    </div>
-                  </div>
+                    <!-- col0 row1: No MFA policy -->
+                    <g class="ce-node-g" data-ce-id="nomfa">
+                      <rect class="ce-node-rect" x="24" y="92" width="180" height="52" rx="8"/>
+                      <text x="36" y="113" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">No MFA policy</text>
+                      <text x="36" y="130" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">Auth bypass · policy</text>
+                      <rect x="130" y="109" width="66" height="18" rx="9" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+                      <text x="163" y="122" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                    </g>
 
-                  <!-- Outcome column -->
-                  <div class="ce-col ce-col--outcome">
-                    <div class="ce-node ce-node--selected" data-ce-id="ransom">
-                      <div class="ce-node-top">
-                        <span class="ce-node-title">Ransomware drop</span>
-                        <span class="ce-badge ce-badge-critical">● Critical</span>
-                      </div>
-                      <span class="ce-node-sub">lockbit_dropper · 14:42</span>
-                    </div>
-                  </div>
+                    <!-- col0 row2: Stale credentials -->
+                    <g class="ce-node-g" data-ce-id="stalecred">
+                      <rect class="ce-node-rect" x="24" y="160" width="180" height="52" rx="8"/>
+                      <text x="36" y="181" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Stale credentials</text>
+                      <text x="36" y="198" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">360-day password</text>
+                      <rect x="154" y="177" width="42" height="18" rx="9" fill="rgba(34,197,94,0.1)" stroke="rgba(34,197,94,0.2)" stroke-width="1"/>
+                      <text x="175" y="190" font-size="10" fill="#4ade80" font-family="Poppins,sans-serif" text-anchor="middle">✓ OK</text>
+                    </g>
+
+                    <!-- col1 row0: Credential dump -->
+                    <g class="ce-node-g" data-ce-id="cred">
+                      <rect class="ce-node-rect" x="364" y="58" width="180" height="52" rx="8"/>
+                      <text x="376" y="79" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Credential dump</text>
+                      <text x="376" y="96" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">WORKSTATION-14 · 14:35</text>
+                      <rect x="472" y="75" width="64" height="18" rx="9" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+                      <text x="504" y="88" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                    </g>
+
+                    <!-- col1 row1: Lateral movement -->
+                    <g class="ce-node-g" data-ce-id="lateral">
+                      <rect class="ce-node-rect" x="364" y="126" width="180" height="52" rx="8"/>
+                      <text x="376" y="147" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Lateral movement</text>
+                      <text x="376" y="164" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">RDP to SERVER-02 · 14:38</text>
+                      <rect x="472" y="143" width="64" height="18" rx="9" fill="rgba(251,191,36,0.1)" stroke="rgba(251,191,36,0.2)" stroke-width="1"/>
+                      <text x="504" y="156" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
+                    </g>
+
+                    <!-- col2 row0: Ransomware drop (selected outcome) -->
+                    <g class="ce-node-g ce-selected" data-ce-id="ransom">
+                      <rect class="ce-node-rect" x="704" y="92" width="180" height="52" rx="8"/>
+                      <text x="716" y="113" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Ransomware drop</text>
+                      <text x="716" y="130" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">lockbit_dropper · 14:42</text>
+                      <rect x="814" y="109" width="62" height="18" rx="9" fill="rgba(239,68,68,0.1)" stroke="rgba(239,68,68,0.25)" stroke-width="1"/>
+                      <text x="845" y="122" font-size="10" fill="#f87171" font-family="Poppins,sans-serif" text-anchor="middle">● Critical</text>
+                    </g>
+                  </svg>
                 </div>
 
                 <!-- Selected node detail panel -->
@@ -1874,9 +1859,15 @@
 
                 <!-- Legend -->
                 <div class="ce-legend">
-                  <span class="ce-legend-item"><svg width="20" height="8" viewBox="0 0 20 8"><line x1="0" y1="4" x2="14" y2="4" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/><path d="M12,1 L17,4 L12,7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/></svg> Causes</span>
-                  <span class="ce-legend-item"><svg width="20" height="8" viewBox="0 0 20 8"><line x1="0" y1="4" x2="20" y2="4" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-dasharray="3 3"/></svg> Related</span>
-                  <span class="ce-legend-item" style="color:var(--success);">✓ OK</span>
+                  <span class="ce-legend-item">
+                    <svg width="22" height="8" viewBox="0 0 22 8"><line x1="0" y1="4" x2="13" y2="4" stroke="rgba(255,255,255,0.4)" stroke-width="2"/><path d="M11,1 L18,4 L11,7 Z" fill="rgba(255,255,255,0.4)"/></svg>
+                    Causes
+                  </span>
+                  <span class="ce-legend-item">
+                    <svg width="22" height="8" viewBox="0 0 22 8"><line x1="0" y1="4" x2="22" y2="4" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-dasharray="2 4"/></svg>
+                    Related
+                  </span>
+                  <span class="ce-legend-item" style="color:#4ade80;">✓ OK</span>
                   <span class="ce-legend-item" style="color:#fbbf24;">△ Warning</span>
                   <span class="ce-legend-item" style="color:#f87171;">● Critical</span>
                 </div>
@@ -2069,103 +2060,110 @@
       row.style.display = '';
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      // Stagger nodes in
-      const nodes = row.querySelectorAll('.ce-node');
+      // Stagger SVG node groups in
+      const nodes = row.querySelectorAll('.ce-node-g');
       let t = 0;
       nodes.forEach(node => {
         setTimeout(() => node.classList.add('ce-visible'), t);
-        t += 160;
+        t += 150;
       });
 
-      // Draw SVG lines after nodes have faded in
-      setTimeout(() => drawCeLines(row), t + 80);
+      // Draw edges after all nodes are in
+      setTimeout(() => drawCeEdges(), t + 80);
 
-      // Reveal detail panel after lines finish drawing
+      // Reveal detail panel after edges finish
       setTimeout(() => {
         const panel = row.querySelector('.ce-panel');
         if (panel) panel.classList.add('ce-visible');
-      }, t + 80 + 5 * 220 + 200);
+      }, t + 80 + 5 * 200 + 300);
 
     }, 1400);
   }
 
-  function drawCeLines(container) {
-    const graph = document.getElementById('ceGraph');
-    const svg   = document.getElementById('ceLines');
-    if (!graph || !svg) return;
+  function drawCeEdges() {
+    const edgesG = document.getElementById('ceEdges');
+    if (!edgesG) return;
 
-    const gr = graph.getBoundingClientRect();
-
-    function midRight(el) {
-      const r = el.getBoundingClientRect();
-      return { x: r.right - gr.left, y: (r.top + r.bottom) / 2 - gr.top };
-    }
-    function midLeft(el) {
-      const r = el.getBoundingClientRect();
-      return { x: r.left - gr.left, y: (r.top + r.bottom) / 2 - gr.top };
-    }
-    function byId(id) { return container.querySelector('[data-ce-id="' + id + '"]'); }
-
-    // Arrowhead marker
-    const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-    defs.innerHTML = `<marker id="ce-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1.5,1.5 L6,4 L1.5,6.5" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>`;
-    svg.appendChild(defs);
-
-    const edgeDefs = [
-      { from: 'vpn',       to: 'cred',    type: 'cause',   label: 'stolen hash' },
-      { from: 'nomfa',     to: 'cred',    type: 'cause',   label: 'no 2FA block' },
-      { from: 'cred',      to: 'lateral', type: 'cause',   label: '−3 min' },
-      { from: 'lateral',   to: 'ransom',  type: 'cause',   label: '−4 min' },
-      { from: 'stalecred', to: 'ransom',  type: 'related', label: 'No change' },
+    const edges = [
+      { type: 'cause',   d: 'M204,50 C284,50 284,84 364,84',       label: 'stolen hash',  mx: 284, my: 60  },
+      { type: 'cause',   d: 'M204,118 C284,118 284,84 364,84',      label: 'no 2FA',       mx: 284, my: 94  },
+      { type: 'cause',   d: 'M544,84 C624,84 624,118 704,118',      label: '−3 min',       mx: 624, my: 94  },
+      { type: 'cause',   d: 'M544,152 C624,152 624,118 704,118',    label: '−4 min',       mx: 624, my: 134 },
+      { type: 'related', d: 'M204,186 C454,186 454,118 704,118',    label: 'No change',    mx: 454, my: 148 },
     ];
 
-    edgeDefs.forEach((ed, i) => {
-      const p1 = midRight(byId(ed.from));
-      const p2 = midLeft(byId(ed.to));
-      const ctrl = (p2.x - p1.x) * 0.42;
-      const d = `M ${p1.x} ${p1.y} C ${p1.x + ctrl} ${p1.y} ${p2.x - ctrl} ${p2.y} ${p2.x} ${p2.y}`;
+    edges.forEach((ed, i) => {
+      const isCause = ed.type === 'cause';
 
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', d);
+      path.setAttribute('d', ed.d);
       path.setAttribute('fill', 'none');
-      path.setAttribute('stroke-width', '1.5');
-      path.setAttribute('marker-end', 'url(#ce-arr)');
-
-      if (ed.type === 'related') {
-        path.setAttribute('stroke', 'rgba(255,255,255,0.18)');
-        path.setAttribute('stroke-dasharray', '4 4');
-        path.style.opacity = '0';
-        path.style.transition = 'opacity 280ms var(--ease-out)';
+      path.setAttribute('stroke-width', isCause ? '2' : '1.5');
+      path.setAttribute('stroke', isCause ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)');
+      if (isCause) {
+        path.setAttribute('marker-end', 'url(#ce-arr)');
       } else {
-        path.setAttribute('stroke', 'rgba(255,255,255,0.25)');
+        path.setAttribute('stroke-dasharray', '2 5');
       }
-      svg.appendChild(path);
+      path.style.opacity = '0';
+      edgesG.appendChild(path);
 
-      // Animate
-      if (ed.type === 'cause') {
+      // Pill label
+      const pillW = ed.label.length * 6.2 + 14;
+      const pillX = ed.mx - pillW / 2;
+      const pillY = ed.my - 9;
+
+      const pillRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      pillRect.setAttribute('x', pillX);
+      pillRect.setAttribute('y', pillY);
+      pillRect.setAttribute('width', pillW);
+      pillRect.setAttribute('height', 18);
+      pillRect.setAttribute('rx', '9');
+      pillRect.setAttribute('fill', '#080808');
+      pillRect.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+      pillRect.setAttribute('stroke-width', '1');
+      pillRect.style.opacity = '0';
+      edgesG.appendChild(pillRect);
+
+      const pillText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      pillText.setAttribute('x', ed.mx);
+      pillText.setAttribute('y', ed.my + 4);
+      pillText.setAttribute('text-anchor', 'middle');
+      pillText.setAttribute('font-size', '10');
+      pillText.setAttribute('font-family', 'Poppins, sans-serif');
+      pillText.setAttribute('fill', isCause ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)');
+      pillText.textContent = ed.label;
+      pillText.style.opacity = '0';
+      edgesG.appendChild(pillText);
+
+      const delay = i * 180;
+      if (isCause) {
         const len = path.getTotalLength();
         path.style.strokeDasharray = len;
         path.style.strokeDashoffset = len;
-        path.style.transition = 'stroke-dashoffset 380ms var(--ease-out)';
-        setTimeout(() => { path.style.strokeDashoffset = '0'; }, i * 200);
+        path.style.opacity = '1';
+        path.style.transition = 'stroke-dashoffset 420ms var(--ease-out)';
+        setTimeout(() => {
+          path.style.strokeDashoffset = '0';
+          setTimeout(() => {
+            pillRect.style.transition = 'opacity 180ms var(--ease-out)';
+            pillText.style.transition = 'opacity 180ms var(--ease-out)';
+            pillRect.style.opacity = '1';
+            pillText.style.opacity = '1';
+          }, 320);
+        }, delay);
       } else {
-        setTimeout(() => { path.style.opacity = '1'; }, i * 200);
+        setTimeout(() => {
+          path.style.transition = 'opacity 320ms var(--ease-out)';
+          path.style.opacity = '1';
+          setTimeout(() => {
+            pillRect.style.transition = 'opacity 180ms var(--ease-out)';
+            pillText.style.transition = 'opacity 180ms var(--ease-out)';
+            pillRect.style.opacity = '1';
+            pillText.style.opacity = '1';
+          }, 260);
+        }, delay);
       }
-
-      // Edge label
-      const mp = path.getPointAtLength(path.getTotalLength() * 0.5);
-      const lbl = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      lbl.setAttribute('x', mp.x);
-      lbl.setAttribute('y', mp.y - 7);
-      lbl.setAttribute('text-anchor', 'middle');
-      lbl.setAttribute('font-size', '10');
-      lbl.setAttribute('font-family', 'Poppins, sans-serif');
-      lbl.setAttribute('fill', 'rgba(255,255,255,0.3)');
-      lbl.textContent = ed.label;
-      lbl.style.opacity = '0';
-      lbl.style.transition = 'opacity 200ms var(--ease-out)';
-      svg.appendChild(lbl);
-      setTimeout(() => { lbl.style.opacity = '1'; }, i * 200 + 300);
     });
   }
 
