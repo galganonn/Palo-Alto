@@ -888,7 +888,7 @@
     .chat-history-panel {
       width: 0; overflow: hidden; flex-shrink: 0;
       transition: width 0.32s cubic-bezier(0.4,0,0.2,1);
-      background: linear-gradient(177deg, rgba(0,0,0,0.95) 0%, rgba(15,18,51,0.95) 100%);
+      background: transparent;
       border-right: 1px solid rgba(255,255,255,0.06);
       display: flex; flex-direction: column;
     }
@@ -979,8 +979,6 @@
       pointer-events: none;
     }
 
-    .chat-input-wrap { padding: 0 160px; }
-
     .suggested-actions {
       display: flex; gap: 8px; flex-wrap: wrap;
       margin-bottom: 10px;
@@ -1000,30 +998,49 @@
     .suggested-pill:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
     .suggested-pill svg { flex-shrink: 0; }
 
-    .chat-input-box {
-      display: flex; align-items: center; gap: 10px;
-      background: var(--subtle-bg); border: 1px solid var(--subtle-border);
-      border-radius: var(--r-16); padding: 10px 14px;
+    /* ── PROMPT BAR (new style) ── */
+    .prompt-wrap { padding: 0 160px 0; }
+    .prompt-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+      display: flex; flex-direction: column; gap: 8px; padding: 12px 0 14px;
       transition: border-color 0.15s;
     }
-    .chat-input-box:focus-within { border-color: rgba(255,255,255,0.2); }
-
-    .chat-input-box textarea {
-      flex: 1; background: transparent; border: none; outline: none;
-      color: var(--text-100); font-family: 'Figtree', sans-serif; font-size: 16px;
-      resize: none; min-height: 20px; max-height: 100px; line-height: 1.5;
+    .prompt-box:focus-within { border-color: rgba(255,255,255,0.22); }
+    .prompt-text-area {
+      padding: 0 16px; min-height: 40px; display: flex; align-items: flex-end;
     }
-    .chat-input-box textarea::placeholder { color: var(--text-50); }
-
-    .chat-send-btn {
-      width: 32px; height: 32px; border-radius: var(--r-8);
-      background: var(--color-blue); border: none;
+    .prompt-textarea {
+      font-size: 16px; line-height: 1.5;
+      color: var(--text-100); font-weight: 400;
+      flex: 1; outline: none; border: none; background: transparent;
+      resize: none; min-height: 24px; max-height: 100px;
+      font-family: 'Figtree', sans-serif;
+    }
+    .prompt-textarea::placeholder { color: var(--text-50); }
+    .prompt-footer {
+      display: flex; align-items: center; padding: 0 16px;
+    }
+    .prompt-attach-btn {
+      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+      border-radius: 6px; cursor: pointer; border: none; background: transparent;
+      color: var(--text-50); transition: background 140ms ease, color 140ms ease;
+    }
+    .prompt-attach-btn:hover { background: rgba(255,255,255,0.08); color: var(--text-80); }
+    .prompt-spacer { flex: 1; }
+    .prompt-send-btn {
+      width: 28px; height: 28px;
+      background: rgba(255,255,255,0.12); border-radius: 6px;
       display: flex; align-items: center; justify-content: center;
-      cursor: pointer; flex-shrink: 0; transition: opacity 0.15s;
+      cursor: pointer; border: none;
+      color: var(--text-80);
+      transition: background 140ms ease, color 140ms ease;
     }
-    .chat-send-btn:hover:not(:disabled) { opacity: 0.85; }
-    .chat-send-btn:focus-visible { outline: 2px solid var(--color-blue-light); outline-offset: 2px; }
-    .chat-send-btn:disabled { opacity: 0.35; cursor: default; }
+    .prompt-send-btn:hover:not(:disabled) { background: rgba(107,95,227,0.5); color: white; }
+    .prompt-send-btn:focus-visible { outline: 2px solid var(--color-blue-light); outline-offset: 2px; }
+    .prompt-send-btn:disabled { opacity: 0.35; cursor: default; }
   </style>
 </head>
 <body>
@@ -1496,14 +1513,24 @@
 
     <!-- Input -->
     <div class="chat-input-bar">
-      <div class="chat-input-wrap">
-        <div class="chat-input-box">
-          <textarea rows="1" placeholder="Ask a follow-up question…" oninput="autoResize(this);updateSendBtn(this)"></textarea>
-          <button class="chat-send-btn" title="Send" disabled>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 7H2M7 2l5 5-5 5"/>
-            </svg>
-          </button>
+      <div class="prompt-wrap">
+        <div class="prompt-box">
+          <div class="prompt-text-area">
+            <textarea class="prompt-textarea" id="prompt-input" rows="1" placeholder="Ask a follow-up question…" oninput="autoResize(this);updateSendBtn(this)"></textarea>
+          </div>
+          <div class="prompt-footer">
+            <button class="prompt-attach-btn" aria-label="Attach file">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13.5 7.5l-6 6a4 4 0 0 1-5.66-5.66l6-6a2.67 2.67 0 0 1 3.77 3.77l-6 6a1.33 1.33 0 0 1-1.88-1.88l5.5-5.5"/>
+              </svg>
+            </button>
+            <div class="prompt-spacer"></div>
+            <button class="prompt-send-btn" id="chatSendBtn" aria-label="Send message" disabled>
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 7H2M7 2l5 5-5 5"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
