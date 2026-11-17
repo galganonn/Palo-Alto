@@ -1832,14 +1832,14 @@
       <!-- Attack path response (hidden until triggered) -->
       <div class="chat-row" id="attackPathRow" style="display:none">
         <div style="display:flex; gap:12px; align-items:flex-start; padding: 0 24px 0 0;">
-          <div class="ai-avatar" style="flex-shrink:0; margin-top:2px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="12" fill="url(#ap-av-grad)"/><path d="M12 5c0 3.866-3.134 7-7 7 3.866 0 7 3.134 7 7 0-3.866 3.134-7 7-7-3.866 0-7-3.134-7-7z" fill="white" opacity="0.9"/><defs><linearGradient id="ap-av-grad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop stop-color="#6B5FE3"/><stop offset="1" stop-color="#A78BFA"/></linearGradient></defs></svg>
+          <div class="ai-avatar">
+            <img src="uploads/agent-avatar.png" alt="" aria-hidden="true" style="width:36px;height:36px;object-fit:cover;display:block;">
           </div>
           <div style="flex:1; min-width:0;">
             <div class="ai-label">Cortex AI · Attack path analysis</div>
             <div class="response-card" id="attackPathCard">
               <div class="response-card-header">
-                <span class="rc-incident-name">Why was SERVER-02 compromised?</span>
+                <span class="rc-incident-name">Full attack chain</span>
               </div>
 
               <!-- Cause & Effect graph (SVG canvas) -->
@@ -2123,6 +2123,7 @@
       loadingEl.remove();
       const row = document.getElementById('attackPathRow');
       row.style.display = '';
+      chatArea.appendChild(row);
       chatArea.scrollTop = chatArea.scrollHeight;
 
       // Stagger SVG node groups in
@@ -2364,7 +2365,8 @@
     // Add user message to chat
     const userRow = document.createElement('div');
     userRow.className = 'chat-row';
-    userRow.innerHTML = '<div class="user-row"><div class="user-msg">' + text.replace(/</g,'&lt;') + '</div></div>';
+    const avatarInner = document.querySelector('.user-avatar')?.innerHTML || '';
+    userRow.innerHTML = '<div class="user-row"><div class="user-msg">' + text.replace(/</g,'&lt;') + '</div><div class="user-avatar">' + avatarInner + '</div></div>';
     chatArea.appendChild(userRow);
     chatArea.scrollTop = chatArea.scrollHeight;
 
