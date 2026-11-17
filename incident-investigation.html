@@ -1856,9 +1856,6 @@
     chatArea.appendChild(userRow);
     chatArea.scrollTop = chatArea.scrollHeight;
 
-    // Open history panel with skeleton
-    openPanel(true);
-
     // Add to history panel
     list.querySelectorAll('.chp-item').forEach(el => el.classList.remove('is-active'));
     const newItem = document.createElement('div');
@@ -1927,6 +1924,11 @@
       promptInput.value = promptInput.placeholder;
       autoResize(promptInput);
       updateSendBtn(promptInput);
+    }
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const btn = document.getElementById('chatSendBtn');
+      if (!btn.disabled) btn.click();
     }
   });
 </script>
