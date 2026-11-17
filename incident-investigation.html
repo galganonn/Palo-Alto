@@ -1295,6 +1295,8 @@
     .ce-node-g.ce-visible { animation: item-fade-up 350ms var(--ease-out) both; }
     .ce-node-g.ce-visible.ce-ready { transition: opacity 200ms var(--ease-out); }
     .ce-node-g.ce-dimmed { opacity: 0.18 !important; }
+    .ce-node-g.ce-connected { opacity: 0.6; }
+    .ce-node-g.ce-connected .ce-node-rect { fill: transparent !important; stroke: rgba(255,255,255,0.08) !important; }
     @media (hover: hover) and (pointer: fine) {
       #ceGraph:not(.ce-has-selection):hover .ce-node-g.ce-ready:not(:hover) { opacity: 0.3; }
     }
@@ -2306,7 +2308,7 @@
       if (e.target.closest('.ce-node-g')) return;
       document.getElementById('ceGraph').classList.remove('ce-has-selection');
       document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => {
-        n.classList.remove('ce-selected', 'ce-dimmed');
+        n.classList.remove('ce-selected', 'ce-dimmed', 'ce-connected');
       });
       document.querySelectorAll('#ceEdges g[data-from]').forEach(eg => {
         eg.style.transition = 'opacity 200ms var(--ease-out)';
@@ -2324,11 +2326,20 @@
         // Update selection + dim others
         const graph = document.getElementById('ceGraph');
         graph.classList.add('ce-has-selection');
-        document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => {
-          n.classList.remove('ce-selected');
-          n.classList.add('ce-dimmed');
+        const connectedIds = new Set();
+        CE_EDGES_DEF.forEach(e => {
+          if (e.from === id) connectedIds.add(e.to);
+          if (e.to === id) connectedIds.add(e.from);
         });
-        nodeEl.classList.remove('ce-dimmed');
+        document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => {
+          n.classList.remove('ce-selected', 'ce-dimmed', 'ce-connected');
+          if (connectedIds.has(n.dataset.ceId)) {
+            n.classList.add('ce-connected');
+          } else {
+            n.classList.add('ce-dimmed');
+          }
+        });
+        nodeEl.classList.remove('ce-dimmed', 'ce-connected');
         nodeEl.classList.add('ce-selected');
 
         // Dim unrelated edges
