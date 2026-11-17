@@ -2042,9 +2042,15 @@
         t += 150;
       });
 
-      // Draw edges after all nodes are in
-      setTimeout(() => { drawCeEdges(); setupNodeClicks(); }, t + 80);
-      // Panel only appears on node click
+      // Draw edges, wire clicks, then auto-select the outcome node
+      setTimeout(() => {
+        drawCeEdges();
+        setupNodeClicks();
+        setTimeout(() => {
+          const outcome = document.querySelector('#ceGraph [data-ce-id="ransom"]');
+          if (outcome) outcome.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        }, 5 * 200 + 400);
+      }, t + 80);
 
     }, 1400);
   }
