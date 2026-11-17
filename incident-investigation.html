@@ -138,13 +138,23 @@
     /* ─── Breadcrumb bar ─── */
     .breadcrumb-bar {
       display: flex; align-items: center; gap: 8px;
-      padding: 10px 20px;
+      padding: 10px 16px 10px 12px;
       border-bottom: 1px solid var(--nav-border);
       flex-shrink: 0;
       background: var(--nav-bg);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
     }
+
+    .bc-panel-toggle {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 7px;
+      background: none; border: none; cursor: pointer;
+      color: var(--text-50); flex-shrink: 0;
+      transition: color 0.15s, background 0.15s;
+    }
+    .bc-panel-toggle:hover { background: rgba(255,255,255,0.07); color: var(--text-100); }
+    .bc-panel-toggle.is-active { color: var(--text-100); background: rgba(107,95,227,0.15); }
 
     .bc-link {
       font-size: 16px; color: var(--text-50); cursor: pointer; text-decoration: none;
@@ -948,6 +958,26 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
+    /* ── Skeleton loading ── */
+    @keyframes chp-shimmer {
+      0%   { background-position: -260px 0; }
+      100% { background-position: 260px 0; }
+    }
+    .chp-skeleton-item {
+      padding: 9px 10px; border-radius: 7px;
+    }
+    .chp-skel-line {
+      border-radius: 4px;
+      background: linear-gradient(90deg,
+        rgba(255,255,255,0.05) 25%,
+        rgba(255,255,255,0.1) 50%,
+        rgba(255,255,255,0.05) 75%);
+      background-size: 260px 100%;
+      animation: chp-shimmer 1.4s infinite linear;
+    }
+    .chp-skel-title { height: 13px; width: 72%; margin-bottom: 7px; }
+    .chp-skel-desc  { height: 11px; width: 48%; }
+
     /* ── AI follow-up text response ── */
     .ai-text-bubble {
       display: flex; gap: 10px; align-items: flex-start;
@@ -1005,7 +1035,7 @@
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 16px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      display: flex; flex-direction: column; gap: 8px; padding: 12px 0 14px;
+      display: flex; flex-direction: column; gap: 4px; padding: 10px 0 10px;
       transition: border-color 0.15s;
     }
     .prompt-box:focus-within { border-color: rgba(255,255,255,0.22); }
@@ -1121,6 +1151,12 @@
 
     <!-- Breadcrumb -->
     <div class="breadcrumb-bar">
+      <button class="bc-panel-toggle" id="panelToggleBtn" aria-label="Toggle history panel" title="History">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1.5" y="1.5" width="13" height="13" rx="2.5"/>
+          <path d="M5.5 1.5v13"/>
+        </svg>
+      </button>
       <a class="bc-link">
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="1.5" y="2" width="10" height="9" rx="1"/><path d="M4 2V1M9 2V1"/><path d="M1.5 5h10"/></svg>
         Incidents
@@ -1595,17 +1631,58 @@
     btn.disabled = !ta.value.trim();
   }
 
+  // Panel toggle helpers
+  function openPanel(withSkeleton) {
+    const panel = document.getElementById('chatHistoryPanel');
+    const list  = document.getElementById('chpList');
+    const btn   = document.getElementById('panelToggleBtn');
+    if (panel.classList.contains('is-open')) return;
+    panel.classList.add('is-open');
+    btn.classList.add('is-active');
+
+    if (!withSkeleton) return;
+
+    // Show skeletons, hide real items
+    const realItems = Array.from(list.querySelectorAll('.chp-item'));
+    realItems.forEach(el => el.style.visibility = 'hidden');
+    const skels = [0.7, 0.55, 0.65, 0.5, 0.6].map(() => {
+      const s = document.createElement('div');
+      s.className = 'chp-skeleton-item';
+      s.innerHTML = '<div class="chp-skel-line chp-skel-title"></div>'
+                  + '<div class="chp-skel-line chp-skel-desc"></div>';
+      list.appendChild(s);
+      return s;
+    });
+
+    setTimeout(() => {
+      skels.forEach(s => s.remove());
+      realItems.forEach(el => el.style.visibility = '');
+    }, 1200);
+  }
+
+  function closePanel() {
+    const panel = document.getElementById('chatHistoryPanel');
+    const btn   = document.getElementById('panelToggleBtn');
+    panel.classList.remove('is-open');
+    btn.classList.remove('is-active');
+  }
+
+  document.getElementById('panelToggleBtn').addEventListener('click', function() {
+    const panel = document.getElementById('chatHistoryPanel');
+    if (panel.classList.contains('is-open')) { closePanel(); }
+    else { openPanel(true); }
+  });
+
   document.getElementById('chatSendBtn').addEventListener('click', function() {
     const ta = document.getElementById('prompt-input');
     const text = ta.value.trim();
     if (!text) return;
 
-    const panel = document.getElementById('chatHistoryPanel');
     const list = document.getElementById('chpList');
     const chatArea = document.getElementById('chatArea');
 
-    // Open panel
-    panel.classList.add('is-open');
+    // Open panel with skeleton on first send
+    openPanel(true);
 
     // Add user message to chat
     const userRow = document.createElement('div');
@@ -1613,7 +1690,7 @@
     userRow.innerHTML = '<div class="user-row"><div class="user-msg">' + text.replace(/</g,'&lt;') + '</div></div>';
     chatArea.appendChild(userRow);
 
-    // Add AI typing indicator, then replace with response
+    // Add AI thinking indicator
     const aiRow = document.createElement('div');
     aiRow.className = 'chat-row';
     aiRow.innerHTML = '<div class="ai-text-bubble"><div class="ai-text-body" style="opacity:0.5;font-style:italic;">Thinking…</div></div>';
