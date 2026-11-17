@@ -1763,13 +1763,11 @@
 
     // Show loading
     loadingRow.style.display = '';
-    chatArea.scrollTop = chatArea.scrollHeight;
 
     // After 1.6s — hide loading, show card row
     setTimeout(() => {
       loadingRow.style.display = 'none';
       investigationRow.style.display = '';
-      chatArea.scrollTop = chatArea.scrollHeight;
 
       const sections = investigationRow.querySelectorAll('[data-section]');
       sections.forEach((el, i) => {
