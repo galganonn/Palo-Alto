@@ -722,6 +722,45 @@
     }
     .ra-cant-undo { color: #ef6b6b; }
 
+    /* ─── Accordion ─── */
+    .ra-row { cursor: pointer; }
+    .ra-row:hover { background:
+        linear-gradient(93deg, #210145 -13.43%, #005880 131.47%) padding-box,
+        linear-gradient(93deg, #362A9E 0%, #085D80 100%) border-box; }
+
+    .ra-summary {
+      font-size: 16px; color: var(--text-50);
+      font-family: 'Figtree', sans-serif; line-height: 1.5;
+      margin-top: 2px;
+    }
+
+    .ra-chevron {
+      flex-shrink: 0; margin-left: 4px;
+      color: var(--text-50); display: flex; align-items: center;
+      transition: transform 0.22s ease;
+    }
+    .ra-row.is-open .ra-chevron { transform: rotate(180deg); }
+
+    .ra-findings {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.28s ease, opacity 0.2s ease;
+      opacity: 0;
+    }
+    .ra-row.is-open .ra-findings { max-height: 200px; opacity: 1; }
+
+    .ra-findings-inner {
+      display: flex; flex-direction: column; gap: 6px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      margin-top: 10px;
+    }
+    .ra-findings-label {
+      font-size: 16px; font-weight: 600; color: var(--text-50);
+      font-family: 'Poppins', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 2px;
+    }
+
     /* ─── SECTION: Follow-up chips ─── */
     .card-chips { padding: 14px 20px; }
 
@@ -1099,7 +1138,7 @@
                 <div class="actions-list">
 
                   <!-- Action 1: Isolate host -->
-                  <div class="ra-row">
+                  <div class="ra-row" onclick="toggleCard(this)" aria-expanded="false">
                     <div class="ra-num" aria-label="1 of 3">1</div>
                     <div class="ra-body">
                       <div class="ra-top">
@@ -1107,27 +1146,30 @@
                         <span class="ra-entity">WORKSTATION-14</span>
                         <span class="ra-source">CrowdStrike</span>
                         <div class="ra-btn-group">
-                          <button class="ra-modify" aria-label="Modify: Isolate host">
-                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z"/></svg>
-                            Modify
-                          </button>
-                          <button class="ra-execute" onclick="executeAction(this)" aria-label="Execute: Isolate host">
+                          <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Isolate host">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="14" height="14" viewBox="0 0 14 14" fill="#2B1A98"><path d="M5.5 0L6.7 4L10.8 5.5L6.7 7L5.5 11L4.3 7L0.2 5.5L4.3 4Z"/><path d="M11 0.5L11.6 2.4L13.5 3L11.6 3.6L11 5.5L10.4 3.6L8.5 3L10.4 2.4Z"/><circle cx="12" cy="10" r="1"/></svg>
+                            <svg class="ra-execute-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#2B1A98" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="M5.5 3v5M3 5.5h5"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
+                          <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
                         </div>
                       </div>
-                      <div class="ra-warn">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
-                        VaultSyncAgent.exe (unsigned, SYSTEM) archiving files every minute
+                      <p class="ra-summary">Unsigned SYSTEM process actively archiving endpoint files via VPN</p>
+                      <div class="ra-findings">
+                        <div class="ra-findings-inner">
+                          <div class="ra-findings-label">Key findings</div>
+                          <div class="ra-warn">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
+                            VaultSyncAgent.exe (unsigned, SYSTEM) archiving files every minute
+                          </div>
+                          <div class="ra-meta">→ Cuts network access · Reversible · Alt: Restrict network only</div>
+                        </div>
                       </div>
-                      <div class="ra-meta">→ Cuts network access · Reversible · Alt: Restrict network only</div>
                     </div>
                   </div>
 
                   <!-- Action 2: Reset credentials -->
-                  <div class="ra-row">
+                  <div class="ra-row" onclick="toggleCard(this)" aria-expanded="false">
                     <div class="ra-num" aria-label="2 of 3">2</div>
                     <div class="ra-body">
                       <div class="ra-top">
@@ -1135,27 +1177,30 @@
                         <span class="ra-entity">john.doe</span>
                         <span class="ra-source">Active Directory</span>
                         <div class="ra-btn-group">
-                          <button class="ra-modify" aria-label="Modify: Reset credentials">
-                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z"/></svg>
-                            Modify
-                          </button>
-                          <button class="ra-execute" onclick="executeAction(this)" aria-label="Execute: Reset credentials">
+                          <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Reset credentials">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="14" height="14" viewBox="0 0 14 14" fill="#2B1A98"><path d="M5.5 0L6.7 4L10.8 5.5L6.7 7L5.5 11L4.3 7L0.2 5.5L4.3 4Z"/><path d="M11 0.5L11.6 2.4L13.5 3L11.6 3.6L11 5.5L10.4 3.6L8.5 3L10.4 2.4Z"/><circle cx="12" cy="10" r="1"/></svg>
+                            <svg class="ra-execute-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#2B1A98" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="M5.5 3v5M3 5.5h5"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
+                          <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
                         </div>
                       </div>
-                      <div class="ra-warn">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
-                        john.doe credentials spawned the agent — account likely compromised
+                      <p class="ra-summary">Compromised account used to deploy malicious agent and move laterally</p>
+                      <div class="ra-findings">
+                        <div class="ra-findings-inner">
+                          <div class="ra-findings-label">Key findings</div>
+                          <div class="ra-warn">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
+                            john.doe credentials spawned the agent — account likely compromised
+                          </div>
+                          <div class="ra-meta">→ Forces re-login all sessions · Reversible · Alt: Suspend only</div>
+                        </div>
                       </div>
-                      <div class="ra-meta">→ Forces re-login all sessions · Reversible · Alt: Suspend only</div>
                     </div>
                   </div>
 
                   <!-- Action 3: Block hash -->
-                  <div class="ra-row">
+                  <div class="ra-row" onclick="toggleCard(this)" aria-expanded="false">
                     <div class="ra-num" aria-label="3 of 3">3</div>
                     <div class="ra-body">
                       <div class="ra-top">
@@ -1163,22 +1208,25 @@
                         <span class="ra-entity" style="font-family:'Poppins',sans-serif;letter-spacing:0.02em;">b10488bc…</span>
                         <span class="ra-source">WildFire</span>
                         <div class="ra-btn-group">
-                          <button class="ra-modify" aria-label="Modify: Block hash org-wide">
-                            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 1.5l3 3L4 13H1v-3L9.5 1.5z"/></svg>
-                            Modify
-                          </button>
-                          <button class="ra-execute" onclick="executeAction(this)" aria-label="Execute: Block hash org-wide">
+                          <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Block hash org-wide">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="14" height="14" viewBox="0 0 14 14" fill="#2B1A98"><path d="M5.5 0L6.7 4L10.8 5.5L6.7 7L5.5 11L4.3 7L0.2 5.5L4.3 4Z"/><path d="M11 0.5L11.6 2.4L13.5 3L11.6 3.6L11 5.5L10.4 3.6L8.5 3L10.4 2.4Z"/><circle cx="12" cy="10" r="1"/></svg>
+                            <svg class="ra-execute-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#2B1A98" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="M5.5 3v5M3 5.5h5"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
+                          <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
                         </div>
                       </div>
-                      <div class="ra-warn">
-                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
-                        0/5 scanner matches, no install record on any host
+                      <p class="ra-summary">Malware binary with no prior detection history dropped on the endpoint</p>
+                      <div class="ra-findings">
+                        <div class="ra-findings-inner">
+                          <div class="ra-findings-label">Key findings</div>
+                          <div class="ra-warn">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
+                            0/5 scanner matches, no install record on any host
+                          </div>
+                          <div class="ra-meta">→ Blocks across all endpoints · <span class="ra-cant-undo">Can't be undone</span> · Alt: Block on this host only</div>
+                        </div>
                       </div>
-                      <div class="ra-meta">→ Blocks across all endpoints · <span class="ra-cant-undo">Can't be undone</span> · Alt: Block on this host only</div>
                     </div>
                   </div>
 
@@ -1213,7 +1261,13 @@
 </div>
 
 <script>
-  function executeAction(btn) {
+  function toggleCard(row) {
+    row.classList.toggle('is-open');
+    row.setAttribute('aria-expanded', row.classList.contains('is-open'));
+  }
+
+  function executeAction(event, btn) {
+    event.stopPropagation();
     if (btn.classList.contains('is-loading') || btn.classList.contains('is-done')) return;
     btn.classList.add('is-loading');
     btn.disabled = true;
@@ -1221,6 +1275,7 @@
     setTimeout(function() {
       btn.classList.remove('is-loading');
       btn.classList.add('is-done');
+      btn.disabled = false;
       btn.querySelector('.ra-execute-label').textContent = 'Done';
     }, 2200);
   }
