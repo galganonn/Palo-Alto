@@ -800,7 +800,7 @@
     .ra-summary {
       font-size: 16px; color: var(--text-50);
       font-family: 'Figtree', sans-serif; line-height: 1.5;
-      margin-top: 2px;
+      margin-top: -4px; margin-bottom: 0;
     }
 
     .ra-chevron {
@@ -856,6 +856,54 @@
       border-radius: 4px;
       padding: 1px 5px;
     }
+
+    /* ─── Action card redesign ─── */
+    .ra-row { display: block; padding: 16px 18px; position: relative; }
+
+    .ra-card-top {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .ra-card-label {
+      display: inline-flex; align-items: center;
+      padding: 2px 8px; border-radius: var(--r-full);
+      font-size: 11px; font-weight: 500; font-family: 'Poppins', sans-serif;
+    }
+    .ra-card-label--recommended,
+    .ra-card-label--approval,
+    .ra-card-label--critical,
+    .ra-card-label--running { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.9); }
+
+    .ra-title-row {
+      display: block; margin-bottom: 2px; padding-right: 160px;
+    }
+    .ra-title-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ra-title-row .ra-action { font-size: 17px; }
+    .ra-cta-btn { position: absolute; top: 44px; right: 18px; }
+
+    .ra-meta-chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+    .ra-chip {
+      display: inline-flex; align-items: center;
+      padding: 3px 10px; border-radius: var(--r-8);
+      font-size: 12px; font-weight: 500; font-family: 'Figtree', sans-serif;
+      background: transparent; border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text-70);
+    }
+
+    .ra-cta-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      height: 36px; padding: 0 14px; border-radius: var(--r-8);
+      font-size: 14px; font-weight: 500; font-family: 'Figtree', sans-serif;
+      background: rgba(255,255,255,0.9); color: #0F1124;
+      border: none; cursor: pointer; flex-shrink: 0;
+      transition: opacity 0.15s; white-space: nowrap;
+    }
+    .ra-cta-btn:hover { opacity: 0.9; }
+    .ra-cta-btn:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
+    .ra-cta-btn--stop { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .ra-cta-btn--stop:hover { background: rgba(239,68,68,0.25); opacity: 1; }
+    .ra-cta-icon { flex-shrink: 0; }
 
     /* ─── SECTION: Follow-up chips ─── */
     .card-chips { padding: 14px 20px; }
@@ -1611,29 +1659,34 @@
               <!-- § Response actions -->
               <div class="g1-inner-card g1-inner-card-actions" data-section="actions">
               <div class="card-actions">
-                <div class="section-label">Recommended actions</div>
+                <div class="section-label">Response: 3 Actions</div>
                 <div class="actions-list">
 
                   <!-- Action 1: Isolate host -->
                   <div class="ra-row" onclick="toggleCard(this)" aria-expanded="false">
-                    <input type="checkbox" class="ra-checkbox" onclick="event.stopPropagation(); updateExecuteAll()" aria-label="Select: Isolate host">
-                    <div class="ra-num" aria-label="1 of 3">1</div>
                     <div class="ra-body">
-                      <div class="ra-top">
-                        <span class="ra-action">Isolate host</span>
-                        <span class="ra-entity">WORKSTATION-14</span>
-                        <span class="ra-source">CrowdStrike</span>
-                        <div class="ra-btn-group">
-                          <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Isolate host">Modify</button>
-                          <button class="ra-execute" onclick="event.stopPropagation()" aria-label="Execute: Isolate host">
-                            <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2B1A98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3.5 3.5 5.5-6"/></svg>
-                            <span class="ra-execute-label">Execute</span>
-                          </button>
-                          <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
+                      <div class="ra-card-top">
+                        <span class="ra-card-label ra-card-label--recommended">Auto-execute · Guardrail passed</span>
+                        <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
+                      </div>
+                      <div class="ra-title-row">
+                        <div class="ra-title-info">
+                          <span class="ra-action">Isolate WORKSTATION-14 from the network</span>
+                          <span class="ra-source">CrowdStrike</span>
                         </div>
+                        <button class="ra-cta-btn" onclick="event.stopPropagation()" aria-label="Review and execute: Isolate Host">
+                          <span class="ra-cta-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L2 3.5v3.5c0 2.8 2.2 5.4 5 6 2.8-.6 5-3.2 5-6V3.5L7 1z" fill="#FF6B1A"/><path d="M5 7l1.5 1.5L9.5 5" stroke="white" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          </span>
+                          Review &amp; Execute
+                        </button>
                       </div>
                       <p class="ra-summary">Unsigned SYSTEM process actively archiving endpoint files via VPN</p>
+                      <div class="ra-meta-chips">
+                        <span class="ra-chip">Confidence 96%</span>
+                        <span class="ra-chip ra-chip--guardrail">Guardrail passed</span>
+                        <span class="ra-chip">Reversible</span>
+                      </div>
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
                           <div class="ra-findings-label">Key findings</div>
@@ -1652,24 +1705,29 @@
 
                   <!-- Action 2: Reset credentials -->
                   <div class="ra-row" onclick="toggleCard(this)" aria-expanded="false">
-                    <input type="checkbox" class="ra-checkbox" onclick="event.stopPropagation(); updateExecuteAll()" aria-label="Select: Reset credentials">
-                    <div class="ra-num" aria-label="2 of 3">2</div>
                     <div class="ra-body">
-                      <div class="ra-top">
-                        <span class="ra-action">Reset credentials</span>
-                        <span class="ra-entity">john.doe</span>
-                        <span class="ra-source">Active Directory</span>
-                        <div class="ra-btn-group">
-                          <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Reset credentials">Modify</button>
-                          <button class="ra-execute" onclick="event.stopPropagation()" aria-label="Execute: Reset credentials">
-                            <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2B1A98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3.5 3.5 5.5-6"/></svg>
-                            <span class="ra-execute-label">Execute</span>
-                          </button>
-                          <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
+                      <div class="ra-card-top">
+                        <span class="ra-card-label ra-card-label--approval">Analyst approval required</span>
+                        <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
+                      </div>
+                      <div class="ra-title-row">
+                        <div class="ra-title-info">
+                          <span class="ra-action">Force-reset john.doe and kill all active sessions</span>
+                          <span class="ra-source">Active Directory</span>
                         </div>
+                        <button class="ra-cta-btn" onclick="event.stopPropagation()" aria-label="Review and execute: Reset Credentials">
+                          <span class="ra-cta-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" fill="#00A4EF"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1" fill="#7FBA00"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1" fill="#F25022"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1" fill="#FFB900"/></svg>
+                          </span>
+                          Review &amp; Execute
+                        </button>
                       </div>
                       <p class="ra-summary">Compromised account used to deploy malicious agent and move laterally</p>
+                      <div class="ra-meta-chips">
+                        <span class="ra-chip">Confidence 85%</span>
+                        <span class="ra-chip ra-chip--approval-required">Approval required</span>
+                        <span class="ra-chip">Reversible</span>
+                      </div>
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
                           <div class="ra-findings-label">Key findings</div>
@@ -1688,24 +1746,29 @@
 
                   <!-- Action 3: Block hash -->
                   <div class="ra-row" onclick="toggleCard(this)" aria-expanded="false">
-                    <input type="checkbox" class="ra-checkbox" onclick="event.stopPropagation(); updateExecuteAll()" aria-label="Select: Block hash org-wide">
-                    <div class="ra-num" aria-label="3 of 3">3</div>
                     <div class="ra-body">
-                      <div class="ra-top">
-                        <span class="ra-action">Block hash org-wide</span>
-                        <span class="ra-entity" style="font-family:'Poppins',sans-serif;letter-spacing:0.02em;">b10488bc…</span>
-                        <span class="ra-source">WildFire</span>
-                        <div class="ra-btn-group">
-                          <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Block hash org-wide">Modify</button>
-                          <button class="ra-execute" onclick="event.stopPropagation()" aria-label="Execute: Block hash org-wide">
-                            <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="#2B1A98" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l3.5 3.5 5.5-6"/></svg>
-                            <span class="ra-execute-label">Execute</span>
-                          </button>
-                          <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
+                      <div class="ra-card-top">
+                        <span class="ra-card-label ra-card-label--critical">CISO approval · Irreversible</span>
+                        <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
+                      </div>
+                      <div class="ra-title-row">
+                        <div class="ra-title-info">
+                          <span class="ra-action">Block b10488bc hash across all org endpoints</span>
+                          <span class="ra-source">WildFire</span>
                         </div>
+                        <button class="ra-cta-btn" onclick="event.stopPropagation()" aria-label="Review and execute: Block Hash Org-Wide">
+                          <span class="ra-cta-icon">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 13c-2.5 0-4.5-2.2-4.5-5 0-1.5.8-2.8 1.5-3.5 0 1 .5 1.8 1.5 1.8-1-2 .5-4.5 2.5-6C7 2.3 7.5 3 8.5 3 8 1.5 9 0 9 0c1.5 1.5 1 5.5.5 6.5 1-1 1-2 1-2 0 2.8-1.5 5.5-3.5 8.5z" fill="#FF4E1A"/></svg>
+                          </span>
+                          Review &amp; Execute
+                        </button>
                       </div>
                       <p class="ra-summary">Malware binary with no prior detection history dropped on the endpoint</p>
+                      <div class="ra-meta-chips">
+                        <span class="ra-chip">Confidence 87%</span>
+                        <span class="ra-chip ra-chip--guardrail">Guardrail checked</span>
+                        <span class="ra-chip ra-chip--irreversible">Irreversible</span>
+                      </div>
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
                           <div class="ra-findings-label">Key findings</div>
