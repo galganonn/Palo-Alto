@@ -672,10 +672,8 @@
       transition: opacity 0.15s, background 0.2s, border-color 0.2s;
     }
     .ra-execute-label {
-      background: linear-gradient(90deg, #2B1A98 0%, #075F82 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #2B1A98;
+      font-size: 16px; font-weight: 400; font-family: 'Figtree', sans-serif;
     }
     .ra-execute:hover:not(:disabled) { opacity: 0.9; }
     .ra-execute:focus-visible { outline: 2px solid rgba(255,255,255,0.6); outline-offset: 2px; }
@@ -706,7 +704,7 @@
     }
     .ra-execute.is-done .ra-execute-icon { display: none; }
     .ra-execute.is-done .ra-execute-label {
-      background: none; -webkit-text-fill-color: #2BB076; color: #2BB076;
+      color: #2BB076;
     }
 
     .ra-warn {
@@ -1176,7 +1174,7 @@
                           <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Isolate host">Modify</button>
                           <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Isolate host">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#2B1A98" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="M5.5 3v5M3 5.5h5"/></svg>
+                            <svg class="ra-execute-icon" width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
                           <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
@@ -1211,7 +1209,7 @@
                           <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Reset credentials">Modify</button>
                           <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Reset credentials">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#2B1A98" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="M5.5 3v5M3 5.5h5"/></svg>
+                            <svg class="ra-execute-icon" width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
                           <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
@@ -1246,7 +1244,7 @@
                           <button class="ra-modify" onclick="event.stopPropagation()" aria-label="Modify: Block hash org-wide">Modify</button>
                           <button class="ra-execute" onclick="executeAction(event, this)" aria-label="Execute: Block hash org-wide">
                             <span class="ra-spinner-icon" aria-hidden="true"></span>
-                            <svg class="ra-execute-icon" width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="#2B1A98" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="5.5" r="4.5"/><path d="M5.5 3v5M3 5.5h5"/></svg>
+                            <svg class="ra-execute-icon" width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
                             <span class="ra-execute-label">Execute</span>
                           </button>
                           <span class="ra-chevron" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg></span>
