@@ -2440,6 +2440,13 @@
   });
 
   const promptInput = document.getElementById('prompt-input');
+  promptInput.addEventListener('click', () => {
+    if (promptInput.value === '') {
+      promptInput.value = promptInput.placeholder;
+      autoResize(promptInput);
+      updateSendBtn(promptInput);
+    }
+  });
   promptInput.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight' && promptInput.value === '') {
       e.preventDefault();
