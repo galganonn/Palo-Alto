@@ -1683,7 +1683,7 @@
         <div class="prompt-avatar-spacer"></div>
         <div class="prompt-box">
           <div class="prompt-text-area">
-            <textarea class="prompt-textarea" id="prompt-input" rows="1" placeholder="↳ Show me the full attack chain" oninput="autoResize(this);updateSendBtn(this)"></textarea>
+            <textarea class="prompt-textarea" id="prompt-input" rows="1" placeholder="Show me the full attack chain" oninput="autoResize(this);updateSendBtn(this)"></textarea>
           </div>
           <div class="prompt-footer">
             <button class="prompt-attach-btn" aria-label="Add context">
@@ -1918,6 +1918,16 @@
       btn.disabled = true;
       card.style.opacity = '0.5';
     });
+  });
+
+  const promptInput = document.getElementById('prompt-input');
+  promptInput.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' && promptInput.value === '') {
+      e.preventDefault();
+      promptInput.value = promptInput.placeholder;
+      autoResize(promptInput);
+      updateSendBtn(promptInput);
+    }
   });
 </script>
 </body>
