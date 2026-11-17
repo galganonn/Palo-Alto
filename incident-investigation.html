@@ -1591,12 +1591,12 @@
   }
 
   function updateSendBtn(ta) {
-    const btn = ta.closest('.chat-input-box').querySelector('.chat-send-btn');
+    const btn = document.getElementById('chatSendBtn');
     btn.disabled = !ta.value.trim();
   }
 
-  document.querySelector('.chat-send-btn').addEventListener('click', function() {
-    const ta = document.querySelector('.chat-input-box textarea');
+  document.getElementById('chatSendBtn').addEventListener('click', function() {
+    const ta = document.getElementById('prompt-input');
     const text = ta.value.trim();
     if (!text) return;
 
@@ -1645,7 +1645,7 @@
 
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', () => {
-      const ta = document.querySelector('.chat-input-box textarea');
+      const ta = document.getElementById('prompt-input');
       const text = chip.textContent.trim().replace('↳', '').trim();
       ta.value = text;
       ta.focus();
