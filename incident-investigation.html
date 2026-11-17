@@ -1321,7 +1321,7 @@
                   <span class="ra-execute-all-count"></span>
                   <button class="ra-execute-all-btn">
                     <svg width="12" height="12" viewBox="0 0 12 12" fill="#2B1A98" xmlns="http://www.w3.org/2000/svg"><path d="M6 0c0 3.314-2.686 6-6 6 3.314 0 6 2.686 6 6 0-3.314 2.686-6 6-6-3.314 0-6-2.686-6-6z"/></svg>
-                    Execute all
+                    <span class="ra-execute-all-label">Execute all</span>
                   </button>
                 </div>
               </div>
@@ -1361,6 +1361,7 @@
     if (checked > 0) {
       footer.classList.add('is-visible');
       countEl.textContent = checked + ' action' + (checked > 1 ? 's' : '') + ' selected';
+      footer.querySelector('.ra-execute-all-label').textContent = 'Execute all ' + checked;
     } else {
       footer.classList.remove('is-visible');
     }
