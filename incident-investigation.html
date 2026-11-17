@@ -746,7 +746,7 @@
       transition: max-height 0.28s ease, opacity 0.2s ease;
       opacity: 0;
     }
-    .ra-row.is-open .ra-findings { max-height: 200px; opacity: 1; }
+    .ra-row.is-open .ra-findings { max-height: 400px; opacity: 1; }
 
     .ra-findings-inner {
       display: flex; flex-direction: column; gap: 6px;
@@ -755,10 +755,37 @@
       margin-top: 10px;
     }
     .ra-findings-label {
-      font-size: 16px; font-weight: 600; color: var(--text-50);
-      font-family: 'Poppins', sans-serif;
-      text-transform: uppercase; letter-spacing: 0.06em;
-      margin-bottom: 2px;
+      font-size: 13px; font-weight: 500; color: var(--text-50);
+      font-family: 'Figtree', sans-serif;
+      letter-spacing: 0.01em;
+      margin-bottom: 8px;
+    }
+
+    .ra-finding {
+      display: flex; gap: 10px; align-items: flex-start;
+    }
+    .ra-finding-num {
+      flex-shrink: 0; width: 20px; height: 20px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600; font-family: 'Poppins', sans-serif;
+      color: var(--text-50); margin-top: 1px;
+    }
+    .ra-finding-text {
+      font-size: 16px; color: var(--text-70);
+      font-family: 'Figtree', sans-serif; line-height: 1.6;
+      flex: 1; min-width: 0;
+    }
+    .ra-code {
+      display: inline;
+      font-family: 'Poppins', monospace;
+      font-size: 14px; font-weight: 500;
+      color: #A5B4FC;
+      background: rgba(129,129,255,0.1);
+      border-radius: 4px;
+      padding: 1px 5px;
     }
 
     /* ─── SECTION: Follow-up chips ─── */
@@ -1158,11 +1185,14 @@
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
                           <div class="ra-findings-label">Key findings</div>
-                          <div class="ra-warn">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
-                            VaultSyncAgent.exe (unsigned, SYSTEM) archiving files every minute
+                          <div class="ra-finding">
+                            <div class="ra-finding-num">1</div>
+                            <p class="ra-finding-text">An unsigned process <span class="ra-code">VaultSyncAgent.exe</span> ran as SYSTEM on <span class="ra-code">WORKSTATION-14</span>, staging files from <span class="ra-code">C:\Users\john.doe\Documents</span> into password-protected archives every minute — starting no later than 14:31.</p>
                           </div>
-                          <div class="ra-meta">→ Cuts network access · Reversible · Alt: Restrict network only</div>
+                          <div class="ra-finding">
+                            <div class="ra-finding-num">2</div>
+                            <p class="ra-finding-text"><span class="ra-code">VaultSyncAgent.exe</span> has 0/5 scanner matches and no inventory or install record — no evidence the tool was sanctioned by IT or ever ran on this host before.</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1189,11 +1219,14 @@
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
                           <div class="ra-findings-label">Key findings</div>
-                          <div class="ra-warn">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
-                            john.doe credentials spawned the agent — account likely compromised
+                          <div class="ra-finding">
+                            <div class="ra-finding-num">1</div>
+                            <p class="ra-finding-text"><span class="ra-code">john.doe</span> authenticated from <span class="ra-code">185.220.101.47</span> (Thailand VPN exit node) at 14:31, then spawned <span class="ra-code">VaultSyncAgent.exe</span> as SYSTEM via a <span class="ra-code">mimikatz</span> credential dump confirmed at 14:35.</p>
                           </div>
-                          <div class="ra-meta">→ Forces re-login all sessions · Reversible · Alt: Suspend only</div>
+                          <div class="ra-finding">
+                            <div class="ra-finding-num">2</div>
+                            <p class="ra-finding-text">The same active session was used to open an RDP connection to <span class="ra-code">SERVER-02</span> at 14:38 — 4 minutes before ransomware was dropped. All sessions must be invalidated to stop lateral movement.</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1220,11 +1253,14 @@
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
                           <div class="ra-findings-label">Key findings</div>
-                          <div class="ra-warn">
-                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.13 2.1L1.1 9a1 1 0 0 0 .87 1.5h8.06a1 1 0 0 0 .87-1.5L6.87 2.1a1 1 0 0 0-1.74 0z"/><path d="M6 5v2.5M6 9h.01"/></svg>
-                            0/5 scanner matches, no install record on any host
+                          <div class="ra-finding">
+                            <div class="ra-finding-num">1</div>
+                            <p class="ra-finding-text">WildFire confirmed <span class="ra-code">lockbit_dropper.exe</span> (hash <span class="ra-code">a3f9c2b1…</span>) as malicious at 14:42 — matched against LockBit ransomware family signatures with 5/5 confidence.</p>
                           </div>
-                          <div class="ra-meta">→ Blocks across all endpoints · <span class="ra-cant-undo">Can't be undone</span> · Alt: Block on this host only</div>
+                          <div class="ra-finding">
+                            <div class="ra-finding-num">2</div>
+                            <p class="ra-finding-text">ReversingLabs returned unknown classification for hash <span class="ra-code">b10488bc…</span> — Threat Level 0/5, Scanner Match 0/0. No inventory record on any host in the org confirms the binary was ever sanctioned.</p>
+                          </div>
                         </div>
                       </div>
                     </div>
