@@ -1219,7 +1219,7 @@
         <div class="chp-list" id="chpList">
           <div class="chp-item is-active" id="chpCurrentItem">
             <div class="chp-item-title">Credential theft & lateral movement</div>
-            <div class="chp-item-desc">Just now</div>
+            <div class="chp-item-desc">INC-4471 · Just now</div>
           </div>
           <div class="chp-item">
             <div class="chp-item-title">Suspicious PowerShell execution</div>
@@ -1556,26 +1556,6 @@
 
             </div><!-- /response-card -->
 
-          </div>
-        </div>
-      </div>
-
-      <!-- Follow-up: user message -->
-      <div class="chat-row">
-        <div class="user-row">
-          <div class="user-msg">What's the blast radius of this attack?</div>
-        </div>
-      </div>
-
-      <!-- Follow-up: AI text response -->
-      <div class="chat-row">
-        <div class="ai-text-bubble">
-          <div class="ai-avatar" aria-hidden="true">
-            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b5fe3' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z'/%3E%3Cpath d='M8 12l2.5 2.5L16 9'/%3E%3C/svg%3E" alt="" style="width:28px;height:28px;border-radius:50%;background:rgba(107,95,227,0.15);padding:4px;">
-          </div>
-          <div class="ai-text-body">
-            <p>Based on the confirmed indicators, the blast radius is currently limited to <strong>2 hosts</strong> — <code style="font-family:'Poppins',monospace;font-size:13px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">WORKSTATION-14</code> and <code style="font-family:'Poppins',monospace;font-size:13px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">SERVER-02</code> — and 1 compromised identity (<code style="font-family:'Poppins',monospace;font-size:13px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">john.doe</code>).</p>
-            <p>The attacker has not yet propagated beyond SERVER-02, but the open RDP session and the still-active <code style="font-family:'Poppins',monospace;font-size:13px;background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;">john.doe</code> credentials mean lateral movement to other domain-joined hosts is feasible. Resetting credentials and isolating WORKSTATION-14 would contain the threat to its current footprint.</p>
           </div>
         </div>
       </div>
