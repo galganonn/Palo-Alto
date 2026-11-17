@@ -1771,9 +1771,6 @@
       investigationRow.style.display = '';
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      // Scroll to show user message + card top together
-      const userMsg = document.getElementById('userMsgRow');
-      if (userMsg) userMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const sections = investigationRow.querySelectorAll('[data-section]');
       sections.forEach((el, i) => {
         setTimeout(() => {
