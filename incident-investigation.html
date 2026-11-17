@@ -86,7 +86,11 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-delay: 0s !important;
+      }
     }
 
     .app { display: flex; height: 100vh; overflow: hidden; }
@@ -994,14 +998,49 @@
     /* ── Investigation build animation ── */
     [data-section] {
       opacity: 0;
-      transform: translateY(12px) scale(0.98);
-      transition: opacity 350ms var(--ease-out),
-                  transform 350ms var(--ease-out);
+      transform: translateY(20px) scale(0.98);
+      transition: opacity 450ms var(--ease-out),
+                  transform 450ms var(--ease-out);
     }
     [data-section].sec-visible {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
+
+    @keyframes item-fade-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Items start hidden until their section reveals */
+    [data-section] .ai-conclusion-row,
+    [data-section] .ai-conclusion-body,
+    [data-section] .ai-meta-row,
+    [data-section] .fact-cell,
+    [data-section] .tl-item,
+    [data-section] .ra-row { opacity: 0; }
+
+    /* AI card: internal stagger */
+    [data-section].sec-visible .ai-conclusion-row { animation: item-fade-up 350ms var(--ease-out) 80ms  both; }
+    [data-section].sec-visible .ai-conclusion-body { animation: item-fade-up 350ms var(--ease-out) 180ms both; }
+    [data-section].sec-visible .ai-meta-row        { animation: item-fade-up 300ms var(--ease-out) 270ms both; }
+
+    /* Fact cells stagger */
+    [data-section].sec-visible .fact-cell:nth-child(1) { animation: item-fade-up 300ms var(--ease-out) 100ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(2) { animation: item-fade-up 300ms var(--ease-out) 170ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(3) { animation: item-fade-up 300ms var(--ease-out) 240ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(4) { animation: item-fade-up 300ms var(--ease-out) 310ms both; }
+
+    /* Timeline items stagger */
+    [data-section].sec-visible .tl-item:nth-child(1) { animation: item-fade-up 300ms var(--ease-out) 160ms both; }
+    [data-section].sec-visible .tl-item:nth-child(2) { animation: item-fade-up 300ms var(--ease-out) 250ms both; }
+    [data-section].sec-visible .tl-item:nth-child(3) { animation: item-fade-up 300ms var(--ease-out) 340ms both; }
+    [data-section].sec-visible .tl-item:nth-child(4) { animation: item-fade-up 300ms var(--ease-out) 430ms both; }
+
+    /* Action rows stagger */
+    [data-section].sec-visible .ra-row:nth-child(1) { animation: item-fade-up 320ms var(--ease-out) 100ms both; }
+    [data-section].sec-visible .ra-row:nth-child(2) { animation: item-fade-up 320ms var(--ease-out) 220ms both; }
+    [data-section].sec-visible .ra-row:nth-child(3) { animation: item-fade-up 320ms var(--ease-out) 340ms both; }
 
     /* Loading indicator */
     .investigation-loading {
@@ -1791,7 +1830,7 @@
       sections.forEach((el, i) => {
         setTimeout(() => {
           el.classList.add('sec-visible');
-        }, i * 80);
+        }, i * 400);
       });
     }, 1600);
   }
