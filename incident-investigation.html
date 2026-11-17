@@ -1813,6 +1813,9 @@
     updateSendBtn(ta);
   });
 
+  // Auto-trigger card build on page load
+  setTimeout(revealCard, 600);
+
   document.querySelectorAll('.g1-tabs').forEach(group => {
     group.querySelectorAll('.g1-tab').forEach(tab => {
       tab.addEventListener('click', () => {
