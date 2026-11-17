@@ -2197,6 +2197,18 @@
   function setupNodeClicks() {
     const panel = document.getElementById('cePanel');
     if (!panel) return;
+
+    // Click on SVG background → deselect
+    document.getElementById('ceGraph').addEventListener('click', (e) => {
+      if (e.target.closest('.ce-node-g')) return;
+      document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => n.classList.remove('ce-selected'));
+      document.querySelectorAll('#ceEdges g[data-from]').forEach(eg => {
+        eg.style.transition = 'opacity 200ms var(--ease-out)';
+        eg.style.opacity = '1';
+      });
+      panel.classList.remove('ce-visible');
+    });
+
     document.querySelectorAll('#ceGraph .ce-node-g').forEach(nodeEl => {
       nodeEl.addEventListener('click', () => {
         const id = nodeEl.dataset.ceId;
