@@ -900,13 +900,13 @@
     .chp-new-btn {
       display: flex; align-items: center; gap: 8px;
       width: 100%; padding: 9px 12px; border-radius: 8px;
-      background: rgba(107,95,227,0.2); border: 1px solid rgba(107,95,227,0.35);
-      color: var(--text-100); font-size: 16px; font-weight: 500;
+      background: none; border: none;
+      color: var(--text-100); font-size: 15px; font-weight: 500;
       font-family: 'Figtree', sans-serif; cursor: pointer;
       transition: background 0.15s;
       white-space: nowrap;
     }
-    .chp-new-btn:hover { background: rgba(107,95,227,0.3); }
+    .chp-new-btn:hover { background: rgba(255,255,255,0.06); }
 
     .chp-history-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -914,8 +914,8 @@
       flex-shrink: 0;
     }
     .chp-history-title {
-      font-size: 16px; font-weight: 600; font-family: 'Figtree', sans-serif;
-      color: var(--text-100);
+      font-size: 12px; font-weight: 500; font-family: 'Figtree', sans-serif;
+      color: rgba(255,255,255,0.35); letter-spacing: 0.06em; text-transform: uppercase;
     }
     .chp-search-btn {
       display: flex; align-items: center; justify-content: center;
@@ -1132,7 +1132,23 @@
       <div class="chp-list" id="chpList">
         <div class="chp-item is-active" id="chpCurrentItem">
           <div class="chp-item-title">Credential theft & lateral movement</div>
-          <div class="chp-item-desc">What's the blast radius?</div>
+          <div class="chp-item-desc">Just now</div>
+        </div>
+        <div class="chp-item">
+          <div class="chp-item-title">Suspicious PowerShell execution</div>
+          <div class="chp-item-desc">2 days ago</div>
+        </div>
+        <div class="chp-item">
+          <div class="chp-item-title">Brute force on VPN gateway</div>
+          <div class="chp-item-desc">5 days ago</div>
+        </div>
+        <div class="chp-item">
+          <div class="chp-item-title">Anomalous S3 bucket access</div>
+          <div class="chp-item-desc">12 days ago</div>
+        </div>
+        <div class="chp-item">
+          <div class="chp-item-title">Outbound traffic to known C2</div>
+          <div class="chp-item-desc">1 month ago</div>
         </div>
       </div>
     </div>
