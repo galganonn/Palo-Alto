@@ -1817,8 +1817,8 @@
                       <text x="504" y="156" font-size="10" fill="#fbbf24" font-family="Poppins,sans-serif" text-anchor="middle">△ Warning</text>
                     </g>
 
-                    <!-- col2 row0: Ransomware drop (selected outcome) -->
-                    <g class="ce-node-g ce-selected" data-ce-id="ransom">
+                    <!-- col2 row0: Ransomware drop (outcome) -->
+                    <g class="ce-node-g" data-ce-id="ransom">
                       <rect class="ce-node-rect" x="704" y="92" width="180" height="52" rx="8"/>
                       <text x="716" y="113" font-size="12" font-weight="600" fill="rgba(255,255,255,0.88)" font-family="Figtree,sans-serif">Ransomware drop</text>
                       <text x="716" y="130" font-size="10" fill="rgba(255,255,255,0.4)" font-family="Poppins,sans-serif">lockbit_dropper · 14:42</text>
@@ -1828,34 +1828,8 @@
                   </svg>
                 </div>
 
-                <!-- Selected node detail panel -->
-                <div class="ce-panel" id="cePanel">
-                  <div class="ce-panel-header">
-                    <div class="ce-panel-hdr-left">
-                      <span class="ce-panel-title">Ransomware drop</span>
-                      <span class="ce-panel-sub">lockbit_dropper · SERVER-02 · 14:42 · outcome</span>
-                    </div>
-                    <span class="ce-badge ce-badge-critical">● Critical</span>
-                  </div>
-                  <p class="ce-panel-desc">≈11 min from initial access to payload execution on SERVER-02.</p>
-                  <div class="ce-panel-row">
-                    <span class="ce-panel-label">Caused by</span>
-                    <div class="ce-panel-chips">
-                      <span class="ce-chip">Credential dump</span><span class="ce-chip-note">stolen hash</span>
-                      <span class="ce-chip">Lateral movement</span><span class="ce-chip-note">RDP pivot</span>
-                    </div>
-                  </div>
-                  <div class="ce-panel-row">
-                    <span class="ce-panel-label">Related to</span>
-                    <div class="ce-panel-chips">
-                      <span class="ce-chip">Stale credentials</span><span class="ce-chip-note">No change</span>
-                    </div>
-                  </div>
-                  <div class="ce-panel-actions">
-                    <button class="btn-outline" style="font-size:12px; padding:6px 14px;">Explain this</button>
-                    <button class="btn-filled" style="font-size:12px; padding:6px 14px;">Isolate SERVER-02</button>
-                  </div>
-                </div>
+                <!-- Selected node detail panel (populated on click) -->
+                <div class="ce-panel" id="cePanel"></div>
 
                 <!-- Legend -->
                 <div class="ce-legend">
@@ -2069,78 +2043,127 @@
       });
 
       // Draw edges after all nodes are in
-      setTimeout(() => drawCeEdges(), t + 80);
-
-      // Reveal detail panel after edges finish
-      setTimeout(() => {
-        const panel = row.querySelector('.ce-panel');
-        if (panel) panel.classList.add('ce-visible');
-      }, t + 80 + 5 * 200 + 300);
+      setTimeout(() => { drawCeEdges(); setupNodeClicks(); }, t + 80);
+      // Panel only appears on node click
 
     }, 1400);
   }
+
+  const CE_NODE_DATA = {
+    vpn: {
+      title: 'VPN from Thailand', sub: 'john.doe · 14:31 · access',
+      badge: { cls: 'ce-badge-change', text: 'access' },
+      desc: 'Authenticated VPN session originating from Thailand — unusual location for this user.',
+      causedBy: [],
+      relatedTo: [{ label: 'No MFA policy', note: 'enabled access' }],
+      actions: [{ text: 'Block session', cls: 'btn-filled' }],
+    },
+    nomfa: {
+      title: 'No MFA policy', sub: 'Auth bypass · policy · Warning',
+      badge: { cls: 'ce-badge-warning', text: '△ Warning' },
+      desc: 'No multi-factor authentication enforced on VPN access for this account.',
+      causedBy: [],
+      relatedTo: [{ label: 'VPN from Thailand', note: 'allowed bypass' }],
+      actions: [{ text: 'Enforce MFA', cls: 'btn-filled' }],
+    },
+    stalecred: {
+      title: 'Stale credentials', sub: '360-day password · OK',
+      badge: { cls: 'ce-badge-ok', text: '✓ OK' },
+      desc: 'Password unchanged for 360 days. No active exploitation confirmed.',
+      causedBy: [],
+      relatedTo: [{ label: 'Ransomware drop', note: 'No change required' }],
+      actions: [{ text: 'Force reset', cls: 'btn-outline' }],
+    },
+    cred: {
+      title: 'Credential dump', sub: 'WORKSTATION-14 · 14:35 · Warning',
+      badge: { cls: 'ce-badge-warning', text: '△ Warning' },
+      desc: 'LSASS memory dump on WORKSTATION-14, 11 credential hashes extracted.',
+      causedBy: [{ label: 'VPN from Thailand', note: 'stolen hash' }, { label: 'No MFA policy', note: 'no 2FA block' }],
+      relatedTo: [],
+      actions: [{ text: 'Isolate workstation', cls: 'btn-filled' }],
+    },
+    lateral: {
+      title: 'Lateral movement', sub: 'RDP to SERVER-02 · 14:38 · Warning',
+      badge: { cls: 'ce-badge-warning', text: '△ Warning' },
+      desc: 'RDP connection from WORKSTATION-14 to SERVER-02 using john.doe credential hash.',
+      causedBy: [{ label: 'Credential dump', note: 'RDP via hash' }],
+      relatedTo: [],
+      actions: [{ text: 'Block RDP', cls: 'btn-filled' }],
+    },
+    ransom: {
+      title: 'Ransomware drop', sub: 'lockbit_dropper · SERVER-02 · 14:42 · outcome',
+      badge: { cls: 'ce-badge-critical', text: '● Critical' },
+      desc: '≈11 min from initial access to payload execution on SERVER-02.',
+      causedBy: [{ label: 'Credential dump', note: 'stolen hash' }, { label: 'Lateral movement', note: 'RDP pivot' }],
+      relatedTo: [{ label: 'Stale credentials', note: 'No change' }],
+      actions: [{ text: 'Explain this', cls: 'btn-outline' }, { text: 'Isolate SERVER-02', cls: 'btn-filled' }],
+    },
+  };
+
+  const CE_EDGES_DEF = [
+    { from: 'vpn',       to: 'cred',   type: 'cause',   label: 'stolen hash',  mx: 284, my: 60  },
+    { from: 'nomfa',     to: 'cred',   type: 'cause',   label: 'no 2FA',       mx: 284, my: 94  },
+    { from: 'cred',      to: 'ransom', type: 'cause',   label: '−3 min',       mx: 624, my: 94  },
+    { from: 'lateral',   to: 'ransom', type: 'cause',   label: '−4 min',       mx: 624, my: 134 },
+    { from: 'stalecred', to: 'ransom', type: 'related', label: 'No change',    mx: 454, my: 148 },
+  ];
+
+  const CE_PATHS = [
+    'M204,50 C284,50 284,84 364,84',
+    'M204,118 C284,118 284,84 364,84',
+    'M544,84 C624,84 624,118 704,118',
+    'M544,152 C624,152 624,118 704,118',
+    'M204,186 C454,186 454,118 704,118',
+  ];
 
   function drawCeEdges() {
     const edgesG = document.getElementById('ceEdges');
     if (!edgesG) return;
 
-    const edges = [
-      { type: 'cause',   d: 'M204,50 C284,50 284,84 364,84',       label: 'stolen hash',  mx: 284, my: 60  },
-      { type: 'cause',   d: 'M204,118 C284,118 284,84 364,84',      label: 'no 2FA',       mx: 284, my: 94  },
-      { type: 'cause',   d: 'M544,84 C624,84 624,118 704,118',      label: '−3 min',       mx: 624, my: 94  },
-      { type: 'cause',   d: 'M544,152 C624,152 624,118 704,118',    label: '−4 min',       mx: 624, my: 134 },
-      { type: 'related', d: 'M204,186 C454,186 454,118 704,118',    label: 'No change',    mx: 454, my: 148 },
-    ];
-
-    edges.forEach((ed, i) => {
+    CE_EDGES_DEF.forEach((ed, i) => {
       const isCause = ed.type === 'cause';
 
+      // Group per edge for opacity control
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.dataset.from = ed.from;
+      g.dataset.to = ed.to;
+      edgesG.appendChild(g);
+
       const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      path.setAttribute('d', ed.d);
+      path.setAttribute('d', CE_PATHS[i]);
       path.setAttribute('fill', 'none');
       path.setAttribute('stroke-width', isCause ? '2' : '1.5');
       path.setAttribute('stroke', isCause ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.2)');
-      if (isCause) {
-        path.setAttribute('marker-end', 'url(#ce-arr)');
-      } else {
-        path.setAttribute('stroke-dasharray', '2 5');
-      }
+      if (isCause) path.setAttribute('marker-end', 'url(#ce-arr)');
+      else path.setAttribute('stroke-dasharray', '2 5');
       path.style.opacity = '0';
-      edgesG.appendChild(path);
+      g.appendChild(path);
 
-      // Pill label
       const pillW = ed.label.length * 6.2 + 14;
       const pillX = ed.mx - pillW / 2;
-      const pillY = ed.my - 9;
 
       const pillRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      pillRect.setAttribute('x', pillX);
-      pillRect.setAttribute('y', pillY);
-      pillRect.setAttribute('width', pillW);
-      pillRect.setAttribute('height', 18);
+      pillRect.setAttribute('x', pillX); pillRect.setAttribute('y', ed.my - 9);
+      pillRect.setAttribute('width', pillW); pillRect.setAttribute('height', 18);
       pillRect.setAttribute('rx', '9');
       pillRect.setAttribute('fill', '#080808');
-      pillRect.setAttribute('stroke', 'rgba(255,255,255,0.1)');
-      pillRect.setAttribute('stroke-width', '1');
+      pillRect.setAttribute('stroke', 'rgba(255,255,255,0.1)'); pillRect.setAttribute('stroke-width', '1');
       pillRect.style.opacity = '0';
-      edgesG.appendChild(pillRect);
+      g.appendChild(pillRect);
 
       const pillText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-      pillText.setAttribute('x', ed.mx);
-      pillText.setAttribute('y', ed.my + 4);
-      pillText.setAttribute('text-anchor', 'middle');
-      pillText.setAttribute('font-size', '10');
+      pillText.setAttribute('x', ed.mx); pillText.setAttribute('y', ed.my + 4);
+      pillText.setAttribute('text-anchor', 'middle'); pillText.setAttribute('font-size', '10');
       pillText.setAttribute('font-family', 'Poppins, sans-serif');
       pillText.setAttribute('fill', isCause ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)');
       pillText.textContent = ed.label;
       pillText.style.opacity = '0';
-      edgesG.appendChild(pillText);
+      g.appendChild(pillText);
 
       const delay = i * 180;
       if (isCause) {
         const len = path.getTotalLength();
-        path.style.strokeDasharray = len;
-        path.style.strokeDashoffset = len;
+        path.style.strokeDasharray = len; path.style.strokeDashoffset = len;
         path.style.opacity = '1';
         path.style.transition = 'stroke-dashoffset 420ms var(--ease-out)';
         setTimeout(() => {
@@ -2148,8 +2171,7 @@
           setTimeout(() => {
             pillRect.style.transition = 'opacity 180ms var(--ease-out)';
             pillText.style.transition = 'opacity 180ms var(--ease-out)';
-            pillRect.style.opacity = '1';
-            pillText.style.opacity = '1';
+            pillRect.style.opacity = '1'; pillText.style.opacity = '1';
           }, 320);
         }, delay);
       } else {
@@ -2159,11 +2181,58 @@
           setTimeout(() => {
             pillRect.style.transition = 'opacity 180ms var(--ease-out)';
             pillText.style.transition = 'opacity 180ms var(--ease-out)';
-            pillRect.style.opacity = '1';
-            pillText.style.opacity = '1';
+            pillRect.style.opacity = '1'; pillText.style.opacity = '1';
           }, 260);
         }, delay);
       }
+    });
+  }
+
+  function setupNodeClicks() {
+    const panel = document.getElementById('cePanel');
+    if (!panel) return;
+    document.querySelectorAll('#ceGraph .ce-node-g').forEach(nodeEl => {
+      nodeEl.addEventListener('click', () => {
+        const id = nodeEl.dataset.ceId;
+        const data = CE_NODE_DATA[id];
+        if (!data) return;
+
+        // Update selection
+        document.querySelectorAll('#ceGraph .ce-node-g').forEach(n => n.classList.remove('ce-selected'));
+        nodeEl.classList.add('ce-selected');
+
+        // Dim unrelated edges
+        document.querySelectorAll('#ceEdges g[data-from]').forEach(eg => {
+          const connected = eg.dataset.from === id || eg.dataset.to === id;
+          eg.style.transition = 'opacity 200ms var(--ease-out)';
+          eg.style.opacity = connected ? '1' : '0.18';
+        });
+
+        // Build panel HTML
+        const causedByRow = data.causedBy.length ? `<div class="ce-panel-row">
+          <span class="ce-panel-label">Caused by</span>
+          <div class="ce-panel-chips">${data.causedBy.map(c => `<span class="ce-chip">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
+        </div>` : '';
+        const relatedRow = data.relatedTo.length ? `<div class="ce-panel-row">
+          <span class="ce-panel-label">Related to</span>
+          <div class="ce-panel-chips">${data.relatedTo.map(c => `<span class="ce-chip">${c.label}</span><span class="ce-chip-note">${c.note}</span>`).join('')}</div>
+        </div>` : '';
+
+        panel.innerHTML = `
+          <div class="ce-panel-header">
+            <div class="ce-panel-hdr-left">
+              <span class="ce-panel-title">${data.title}</span>
+              <span class="ce-panel-sub">${data.sub}</span>
+            </div>
+            <span class="ce-badge ${data.badge.cls}">${data.badge.text}</span>
+          </div>
+          <p class="ce-panel-desc">${data.desc}</p>
+          ${causedByRow}${relatedRow}
+          <div class="ce-panel-actions">
+            ${data.actions.map(a => `<button class="${a.cls}" style="font-size:12px;padding:6px 14px;">${a.text}</button>`).join('')}
+          </div>`;
+        panel.classList.add('ce-visible');
+      });
     });
   }
 
