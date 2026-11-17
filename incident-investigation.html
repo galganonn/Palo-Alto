@@ -1080,7 +1080,7 @@
 
     /* ── PROMPT BAR (new style) ── */
     .prompt-wrap { padding: 0 160px 0; display: flex; gap: 12px; }
-    .prompt-spacer { width: 36px; flex-shrink: 0; }
+    .prompt-avatar-spacer { width: 36px; flex-shrink: 0; }
     .prompt-box {
       flex: 1; min-width: 0;
       background: rgba(255,255,255,0.06);
@@ -1285,7 +1285,7 @@
     <div class="chat-area" id="chatArea">
 
       <!-- User message -->
-      <div class="chat-row">
+      <div class="chat-row" id="userMsgRow">
         <div class="user-row">
           <div class="user-msg">
             Investigate incident <strong style="color:var(--text-100);font-family:'Poppins',sans-serif">#INC-4471</strong> — Credential theft + lateral movement. Provide full analysis with response recommendations.
@@ -1617,7 +1617,7 @@
     <!-- Input -->
     <div class="chat-input-bar">
       <div class="prompt-wrap">
-        <div class="prompt-spacer"></div>
+        <div class="prompt-avatar-spacer"></div>
         <div class="prompt-box">
           <div class="prompt-text-area">
             <textarea class="prompt-textarea" id="prompt-input" rows="1" placeholder="Isolate WORKSTATION-14 and reset john.doe credentials?" oninput="autoResize(this);updateSendBtn(this)"></textarea>
@@ -1771,8 +1771,9 @@
       investigationRow.style.display = '';
       chatArea.scrollTop = chatArea.scrollHeight;
 
-      // Scroll to top of card once, then reveal sections
-      investigationRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Scroll to show user message + card top together
+      const userMsg = document.getElementById('userMsgRow');
+      if (userMsg) userMsg.scrollIntoView({ behavior: 'smooth', block: 'start' });
       const sections = investigationRow.querySelectorAll('[data-section]');
       sections.forEach((el, i) => {
         setTimeout(() => {
