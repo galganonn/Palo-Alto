@@ -194,6 +194,7 @@
       padding: 24px 0;
       display: flex; flex-direction: column; gap: 20px;
     }
+    #investigationRow { margin-top: -14px; }
     .chat-area::-webkit-scrollbar { width: 4px; }
     .chat-area::-webkit-scrollbar-track { background: transparent; }
     .chat-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 2px; }
@@ -354,6 +355,145 @@
     }
     .ai-meta-item svg { width: 13px; height: 13px; flex-shrink: 0; }
     .ai-meta-sep { color: rgba(192,192,214,0.65); font-size: 16px; }
+
+    /* ─── SECTION: Investigation trace card ─── */
+    @keyframes inv-spin { to { transform: rotate(360deg); } }
+
+    .inv-card {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.04);
+      overflow: visible;
+    }
+
+    /* ── done: dissolve the card frame ── */
+    .inv-card.done {
+      border-color: transparent;
+      background: transparent;
+      border-radius: 0;
+    }
+    .inv-card.done .inv-trace-header {
+      padding: 0; gap: 6px; cursor: pointer;
+      border-bottom: none;
+    }
+    .inv-card.done .inv-trace-header:hover { opacity: 0.75; }
+    .inv-card.done .inv-trace-title { font-size: 13px; color: var(--text-50); }
+    .inv-card.done .inv-trace-chevron {
+      display: block !important;
+      opacity: 0.45;
+      transform: rotate(-90deg);
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .inv-card.done.is-expanded .inv-trace-chevron { transform: rotate(0deg); }
+    /* steps body gets its own card when expanded */
+    .inv-card.done .inv-steps {
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      margin-top: 8px;
+      padding: 14px 16px 12px;
+      gap: 4px;
+    }
+
+    .inv-trace-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px;
+    }
+    .inv-card:not(.done) .inv-trace-header {
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .inv-trace-chevron { display: none; width: 12px; height: 12px; }
+
+    .inv-trace-spinner {
+      width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
+      border: 1.4px solid rgba(255,255,255,0.1);
+      border-top-color: rgba(149,187,242,0.65);
+      animation: inv-spin 0.9s linear infinite;
+      transition: border-color 0.3s;
+      position: relative;
+    }
+    .inv-card.done .inv-trace-spinner {
+      animation: none;
+      border-color: rgba(43,176,118,0.55);
+      background: rgba(43,176,118,0.1);
+    }
+    .inv-card.done .inv-trace-spinner::after {
+      content: '';
+      position: absolute; top: 50%; left: 50%;
+      width: 5px; height: 3px;
+      border-left: 1.3px solid #2BB076;
+      border-bottom: 1.3px solid #2BB076;
+      transform: translate(-50%, -68%) rotate(-45deg);
+    }
+
+    .inv-trace-title {
+      font-size: 14px; font-weight: 400; color: var(--text-80);
+      font-family: 'Figtree', sans-serif;
+    }
+
+    .inv-steps {
+      display: flex; flex-direction: column;
+      gap: 0; padding: 16px 16px 14px;
+    }
+
+    .inv-step {
+      display: flex; align-items: flex-start; gap: 10px;
+      opacity: 0; transform: translateY(5px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .inv-step-icon-col {
+      display: flex; flex-direction: column;
+      align-items: center; flex-shrink: 0;
+      padding-top: 1px;
+    }
+
+    .inv-step-icon {
+      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
+      border: 1.4px solid rgba(255,255,255,0.15);
+      position: relative; transition: border-color 0.2s, background 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .inv-step-icon.active { border-color: rgba(255,255,255,0.08); }
+    .inv-step-icon.active::after {
+      content: '';
+      position: absolute; inset: -1.4px;
+      border-radius: 50%;
+      border: 1.4px solid transparent;
+      border-top-color: rgba(149,187,242,0.75);
+      animation: inv-spin 0.9s linear infinite;
+    }
+    .inv-step-icon.done { border: none; background: #10b981; color: #fff; }
+
+    .inv-step-connector {
+      margin-top: 3px; flex: 1; min-height: 10px;
+      width: 1px; background: none;
+      border-left: 1px dashed rgba(255,255,255,0.3);
+    }
+    .inv-step:last-child .inv-step-connector { display: none; }
+
+    .inv-step-body {
+      flex: 1; display: flex; align-items: center; gap: 10px;
+      padding-bottom: 10px;
+    }
+    .inv-step:last-child .inv-step-body { padding-bottom: 0; }
+
+    .inv-step-text {
+      flex: 1; font-size: 14px; color: var(--text-50);
+      font-family: 'Figtree', sans-serif;
+      transition: color 0.2s, opacity 0.2s;
+    }
+    .inv-step-text.active { color: rgba(149,187,242,0.9); }
+    .inv-step-text.done { opacity: 0.65; }
+
+    .inv-step-time {
+      font-size: 12px; color: var(--text-50);
+      font-family: 'Figtree', sans-serif;
+      font-variant-numeric: tabular-nums;
+      opacity: 0; transition: opacity 0.3s; white-space: nowrap;
+    }
+    .inv-step-time.vis { opacity: 1; }
 
     /* Tabs */
     .g1-tabs {
@@ -1513,9 +1653,21 @@
             <img src="uploads/agent-avatar.png" alt="" aria-hidden="true" style="width:36px;height:36px;object-fit:cover;display:block;">
           </div>
           <div class="ai-content">
-            <div class="investigation-loading">
-              <span>Investigating incident</span>
-              <div class="ld-dots"><span></span><span></span><span></span></div>
+            <div class="inv-card" id="invTrace">
+              <div class="inv-trace-header" id="invTraceHeader">
+                <div class="inv-trace-spinner" id="invTraceSpinner"></div>
+                <span class="inv-trace-title" id="invTraceTitle">Investigating #INC-4471…</span>
+                <svg class="inv-trace-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg>
+              </div>
+              <div class="inv-steps" id="invSteps">
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Parsing incident metadata</span><span class="inv-step-time">0.023s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Fetching alerts and event log</span><span class="inv-step-time">0.089s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Identifying threat actors</span><span class="inv-step-time">0.134s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Classifying to MITRE ATT&amp;CK</span><span class="inv-step-time">0.201s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Cross-referencing threat intel</span><span class="inv-step-time">0.078s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Generating investigation plan</span><span class="inv-step-time">0.157s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Scoring verdict and confidence</span><span class="inv-step-time">0.045s</span></div></div>
+              </div>
             </div>
           </div>
         </div>
@@ -1523,12 +1675,7 @@
 
       <div class="chat-row" id="investigationRow" style="display:none;">
         <div class="ai-row">
-          <div class="ai-avatar">
-            <img src="uploads/agent-avatar.png" alt="" aria-hidden="true" style="width:36px;height:36px;object-fit:cover;display:block;">
-          </div>
-          <div class="ai-content">
-
-            <div class="ai-label">Cortex AI · Investigated 23 alerts across 2 hosts</div>
+          <div class="ai-content" style="margin-left:48px;">
 
             <!-- ════ ONE GLASS CARD ════ -->
             <div class="response-card" id="responseCard">
@@ -2095,21 +2242,78 @@
     const investigationRow = document.getElementById('investigationRow');
     const chatArea = document.getElementById('chatArea');
 
-    // Show loading
     loadingRow.style.display = '';
+    chatArea.scrollTop = chatArea.scrollHeight;
 
-    // After 1.6s — hide loading, show card row
+    const steps = loadingRow.querySelectorAll('.inv-step');
+    const STEP_MS = 420;
+    const DONE_LAG = 260;
+
+    steps.forEach((step, i) => {
+      const icon = step.querySelector('.inv-step-icon');
+      const text = step.querySelector('.inv-step-text');
+      const timeEl = step.querySelector('.inv-step-time');
+
+      // Appear
+      setTimeout(() => {
+        step.style.opacity = '1';
+        step.style.transform = 'translateY(0)';
+        icon.classList.add('active');
+        text.classList.add('active');
+        chatArea.scrollTop = chatArea.scrollHeight;
+
+        // Mark done
+        setTimeout(() => {
+          icon.classList.remove('active');
+          icon.classList.add('done');
+          icon.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+          text.classList.remove('active');
+          text.classList.add('done');
+          timeEl.classList.add('vis');
+        }, DONE_LAG);
+      }, i * STEP_MS);
+    });
+
+    // After all steps done — collapse to done state
+    const allDone = steps.length * STEP_MS + DONE_LAG + 350;
     setTimeout(() => {
-      loadingRow.style.display = 'none';
-      investigationRow.style.display = '';
+      const card   = document.getElementById('invTrace');
+      const title  = document.getElementById('invTraceTitle');
+      const header = document.getElementById('invTraceHeader');
+      const stepsEl = document.getElementById('invSteps');
 
+      // Fade steps out, then hide
+      stepsEl.style.transition = 'opacity 0.3s ease';
+      stepsEl.style.opacity = '0';
+      setTimeout(() => {
+        stepsEl.style.opacity = '';
+        stepsEl.style.transition = '';
+        stepsEl.style.display = 'none';
+
+        // Switch card to done state
+        title.textContent = 'Investigation complete';
+        card.classList.add('done');
+
+        // Wire up toggle
+        let expanded = false;
+        header.addEventListener('click', () => {
+          expanded = !expanded;
+          stepsEl.style.display = expanded ? '' : 'none';
+          card.classList.toggle('is-expanded', expanded);
+        });
+      }, 320);
+    }, allDone);
+
+    // Show investigation card
+    setTimeout(() => {
+      investigationRow.style.display = '';
       const sections = investigationRow.querySelectorAll('[data-section]');
       sections.forEach((el, i) => {
-        setTimeout(() => {
-          el.classList.add('sec-visible');
-        }, i * 400);
+        setTimeout(() => el.classList.add('sec-visible'), i * 400);
       });
-    }, 1600);
+      // Scroll to show the collapsed reasoning header + top of card, not the bottom
+      loadingRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, allDone + 700);
   }
 
   let attackPathRevealed = false;
