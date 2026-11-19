@@ -1970,6 +1970,30 @@
         </div>
       </div>
 
+      <!-- Attack chain reasoning trace (hidden until triggered) -->
+      <div class="chat-row" id="attackChainLoadingRow" style="display:none;">
+        <div class="ai-row">
+          <div class="ai-avatar">
+            <img src="uploads/agent-avatar.png" alt="" aria-hidden="true" style="width:36px;height:36px;object-fit:cover;display:block;">
+          </div>
+          <div class="ai-content">
+            <div class="inv-card" id="attackChainTrace">
+              <div class="inv-trace-header" id="attackChainTraceHeader">
+                <div class="inv-trace-spinner" id="attackChainTraceSpinner"></div>
+                <span class="inv-trace-title" id="attackChainTraceTitle">Mapping attack chain…</span>
+                <svg class="inv-trace-chevron" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4l4 4 4-4"/></svg>
+              </div>
+              <div class="inv-steps" id="attackChainSteps">
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Querying process event logs</span><span class="inv-step-time">0.041s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Mapping lateral movement path</span><span class="inv-step-time">0.112s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Correlating event timestamps</span><span class="inv-step-time">0.067s</span></div></div>
+                <div class="inv-step"><div class="inv-step-icon-col"><div class="inv-step-icon"></div><div class="inv-step-connector"></div></div><div class="inv-step-body"><span class="inv-step-text">Building causal graph</span><span class="inv-step-time">0.089s</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Attack path response (hidden until triggered) -->
       <div class="chat-row" id="attackPathRow" style="display:none">
         <div style="display:flex; gap:12px; align-items:flex-start; padding: 0 24px 0 0;">
@@ -2305,37 +2329,89 @@
     if (attackPathRevealed) return;
     attackPathRevealed = true;
 
-    const loadingEl = document.createElement('div');
-    loadingEl.className = 'chat-row';
-    loadingEl.innerHTML = `<div style="padding:0 24px;"><div class="ai-thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
+    const loadingEl = document.getElementById('attackChainLoadingRow');
+    loadingEl.style.display = '';
     chatArea.appendChild(loadingEl);
-    chatArea.scrollTop = chatArea.scrollHeight;
+    loadingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    setTimeout(() => {
-      loadingEl.remove();
-      const row = document.getElementById('attackPathRow');
-      row.style.display = '';
-      chatArea.appendChild(row);
-      chatArea.scrollTop = chatArea.scrollHeight;
+    const steps = loadingEl.querySelectorAll('.inv-step');
+    const STEP_MS = 300;
+    const DONE_LAG = 200;
 
-      // Stagger SVG node groups in
-      const nodes = row.querySelectorAll('.ce-node-g');
-      let t = 0;
-      nodes.forEach(node => {
-        setTimeout(() => {
-          node.classList.add('ce-visible');
-          setTimeout(() => node.classList.add('ce-ready'), 360);
-        }, t);
-        t += 150;
-      });
+    steps.forEach((step, i) => {
+      const icon = step.querySelector('.inv-step-icon');
+      const text = step.querySelector('.inv-step-text');
+      const timeEl = step.querySelector('.inv-step-time');
 
-      // Draw edges and wire clicks — no auto-selection
       setTimeout(() => {
-        drawCeEdges();
-        setupNodeClicks();
-      }, t + 80);
+        step.style.opacity = '1';
+        step.style.transform = 'translateY(0)';
+        icon.classList.add('active');
+        text.classList.add('active');
+        chatArea.scrollTop = chatArea.scrollHeight;
 
-    }, 1400);
+        setTimeout(() => {
+          icon.classList.remove('active');
+          icon.classList.add('done');
+          icon.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+          text.classList.remove('active');
+          text.classList.add('done');
+          timeEl.classList.add('vis');
+        }, DONE_LAG);
+      }, i * STEP_MS);
+    });
+
+    const allDone = steps.length * STEP_MS + DONE_LAG + 250;
+    setTimeout(() => {
+      const card    = document.getElementById('attackChainTrace');
+      const title   = document.getElementById('attackChainTraceTitle');
+      const header  = document.getElementById('attackChainTraceHeader');
+      const stepsEl = document.getElementById('attackChainSteps');
+
+      stepsEl.style.transition = 'opacity 0.25s ease';
+      stepsEl.style.opacity = '0';
+      setTimeout(() => {
+        stepsEl.style.opacity = '';
+        stepsEl.style.transition = '';
+        stepsEl.style.display = 'none';
+
+        title.textContent = 'Attack chain mapped';
+        card.classList.add('done');
+        const spinner = document.getElementById('attackChainTraceSpinner');
+        spinner.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+
+        let expanded = false;
+        header.addEventListener('click', () => {
+          expanded = !expanded;
+          stepsEl.style.display = expanded ? '' : 'none';
+          card.classList.toggle('is-expanded', expanded);
+        });
+
+        // Reveal attack path card
+        setTimeout(() => {
+          const row = document.getElementById('attackPathRow');
+          row.style.display = '';
+          chatArea.appendChild(row);
+          chatArea.scrollTop = chatArea.scrollHeight;
+
+          const nodes = row.querySelectorAll('.ce-node-g');
+          let t = 0;
+          nodes.forEach(node => {
+            setTimeout(() => {
+              node.classList.add('ce-visible');
+              setTimeout(() => node.classList.add('ce-ready'), 360);
+            }, t);
+            t += 150;
+          });
+
+          setTimeout(() => {
+            drawCeEdges();
+            setupNodeClicks();
+          }, t + 80);
+        }, 450);
+
+      }, 250);
+    }, allDone);
   }
 
   const CE_NODE_DATA = {
