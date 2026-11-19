@@ -406,25 +406,18 @@
     .inv-trace-chevron { display: none; width: 12px; height: 12px; }
 
     .inv-trace-spinner {
-      width: 15px; height: 15px; border-radius: 50%; flex-shrink: 0;
+      width: 16px; height: 16px; border-radius: 50%; flex-shrink: 0;
       border: 1.4px solid rgba(255,255,255,0.1);
       border-top-color: rgba(149,187,242,0.65);
       animation: inv-spin 0.9s linear infinite;
-      transition: border-color 0.3s;
       position: relative;
     }
     .inv-card.done .inv-trace-spinner {
       animation: none;
-      border-color: rgba(43,176,118,0.55);
-      background: rgba(43,176,118,0.1);
-    }
-    .inv-card.done .inv-trace-spinner::after {
-      content: '';
-      position: absolute; top: 50%; left: 50%;
-      width: 5px; height: 3px;
-      border-left: 1.3px solid #2BB076;
-      border-bottom: 1.3px solid #2BB076;
-      transform: translate(-50%, -68%) rotate(-45deg);
+      border: none;
+      background: #10b981;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
     }
 
     .inv-trace-title {
@@ -1301,21 +1294,21 @@
     }
 
     .suggested-actions {
-      display: flex; gap: 8px; flex-wrap: wrap;
-      margin-bottom: 10px;
+      display: flex; gap: 6px; flex-wrap: wrap;
+      margin-top: 10px;
     }
     .suggested-pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 6px 12px;
-      background: var(--subtle-bg);
-      border: 1px solid var(--subtle-border);
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 11px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: var(--r-full);
-      font-size: 16px; color: var(--text-70);
+      font-size: 13px; color: var(--text-60);
       font-family: 'Figtree', sans-serif;
       cursor: pointer; white-space: nowrap;
-      transition: border-color 0.15s, color 0.15s;
+      transition: border-color 0.15s, color 0.15s, background 0.15s;
     }
-    .suggested-pill:hover { border-color: rgba(255,255,255,0.25); color: var(--text-100); }
+    .suggested-pill:hover { border-color: rgba(255,255,255,0.22); color: var(--text-90); background: rgba(255,255,255,0.08); }
     .suggested-pill:focus-visible { outline: 2px solid var(--color-blue); outline-offset: 2px; }
     .suggested-pill svg { flex-shrink: 0; }
 
@@ -2104,6 +2097,15 @@
           </button>
         </div>
       </div>
+      <div class="prompt-wrap" id="suggestionChips">
+        <div class="prompt-avatar-spacer"></div>
+        <div class="suggested-actions">
+          <button class="suggested-pill" data-suggest="Show me the lateral movement path">Show me the lateral movement path</button>
+          <button class="suggested-pill" data-suggest="Which accounts were compromised?">Which accounts were compromised?</button>
+          <button class="suggested-pill" data-suggest="Explain the ransomware behavior">Explain the ransomware behavior</button>
+          <button class="suggested-pill" data-suggest="Generate a containment playbook">Generate a containment playbook</button>
+        </div>
+      </div>
     </div>
 
     </div><!-- /chat-content -->
@@ -2271,6 +2273,8 @@
         // Switch card to done state
         title.textContent = 'Investigation complete';
         card.classList.add('done');
+        const spinner = document.getElementById('invTraceSpinner');
+        spinner.innerHTML = '<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
 
         // Wire up toggle
         let expanded = false;
@@ -2592,10 +2596,25 @@
       revealCard();
     }
 
-    // Reset textarea
+    // Reset textarea + hide suggestions
     ta.value = '';
     ta.style.height = 'auto';
     updateSendBtn(ta);
+    const chips = document.getElementById('suggestionChips');
+    if (chips) chips.style.display = 'none';
+  });
+
+  // Suggestion chips
+  const suggestionChips = document.getElementById('suggestionChips');
+  document.querySelectorAll('#suggestionChips .suggested-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      suggestionChips.style.opacity = '0';
+      suggestionChips.style.transition = 'opacity 0.15s ease';
+      setTimeout(() => { suggestionChips.style.display = 'none'; }, 150);
+      const input = document.getElementById('prompt-input');
+      input.focus();
+      typeIntoInput(input, pill.dataset.suggest);
+    });
   });
 
   // Auto-trigger card build on page load
