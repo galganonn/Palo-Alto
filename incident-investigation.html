@@ -2677,18 +2677,21 @@
 
   // Chip sets per context
   const CHIP_SETS = {
-    attackChain: [
-      "How did john.doe get compromised?",
-      "Show me the credential dump details",
-      "What's the blast radius?",
-      "Generate an incident timeline"
-    ]
+    attackChain: {
+      chips: [
+        "Was data exfiltrated before the ransomware drop?",
+        "What happened in the 3-min gap between dump and RDP?",
+        "Which other hosts were accessed with the dumped hashes?",
+        "Did the attacker establish persistence on SERVER-02?"
+      ],
+      placeholder: "Show me all hosts john.doe accessed this week"
+    }
   };
 
   function updateChips(setKey) {
     const container = document.getElementById('suggestionChips');
     const pills = container.querySelectorAll('.suggested-pill');
-    const newTexts = CHIP_SETS[setKey];
+    const { chips: newTexts, placeholder: newPlaceholder } = CHIP_SETS[setKey];
     pills.forEach(pill => {
       pill.style.transition = 'opacity 0.15s ease';
       pill.style.opacity = '0';
@@ -2700,6 +2703,9 @@
         pill.style.transition = '';
         pill.style.opacity = '0';
       });
+      if (newPlaceholder) {
+        document.getElementById('prompt-input').placeholder = newPlaceholder;
+      }
       pills.forEach((pill, i) => {
         setTimeout(() => {
           pill.style.transition = 'opacity 0.2s ease';
