@@ -2403,6 +2403,7 @@
           setTimeout(() => {
             drawCeEdges();
             setupNodeClicks();
+            setTimeout(() => updateChips('attackChain'), 400);
           }, t + 80);
         }, 450);
 
@@ -2668,21 +2669,50 @@
       revealCard();
     }
 
-    // Reset textarea + hide suggestions
+    // Reset textarea
     ta.value = '';
     ta.style.height = 'auto';
     updateSendBtn(ta);
-    const chips = document.getElementById('suggestionChips');
-    if (chips) chips.style.display = 'none';
   });
+
+  // Chip sets per context
+  const CHIP_SETS = {
+    attackChain: [
+      "How did john.doe get compromised?",
+      "Show me the credential dump details",
+      "What's the blast radius?",
+      "Generate an incident timeline"
+    ]
+  };
+
+  function updateChips(setKey) {
+    const container = document.getElementById('suggestionChips');
+    const pills = container.querySelectorAll('.suggested-pill');
+    const newTexts = CHIP_SETS[setKey];
+    pills.forEach(pill => {
+      pill.style.transition = 'opacity 0.15s ease';
+      pill.style.opacity = '0';
+    });
+    setTimeout(() => {
+      pills.forEach((pill, i) => {
+        pill.textContent = newTexts[i];
+        pill.dataset.suggest = newTexts[i];
+        pill.style.transition = '';
+        pill.style.opacity = '0';
+      });
+      pills.forEach((pill, i) => {
+        setTimeout(() => {
+          pill.style.transition = 'opacity 0.2s ease';
+          pill.style.opacity = '1';
+        }, i * 60);
+      });
+    }, 150);
+  }
 
   // Suggestion chips
   const suggestionChips = document.getElementById('suggestionChips');
   document.querySelectorAll('#suggestionChips .suggested-pill').forEach(pill => {
     pill.addEventListener('click', () => {
-      suggestionChips.style.opacity = '0';
-      suggestionChips.style.transition = 'opacity 0.15s ease';
-      setTimeout(() => { suggestionChips.style.display = 'none'; }, 150);
       const input = document.getElementById('prompt-input');
       input.focus();
       typeIntoInput(input, pill.dataset.suggest);
