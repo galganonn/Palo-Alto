@@ -1184,19 +1184,17 @@
     }
 
     /* ── Investigation build animation ── */
+    /* Section container: snap in quickly so items are the star */
     [data-section] {
       opacity: 0;
-      transform: translateY(20px) scale(0.98);
-      transition: opacity 450ms var(--ease-out),
-                  transform 450ms var(--ease-out);
+      transition: opacity 80ms linear;
     }
     [data-section].sec-visible {
       opacity: 1;
-      transform: translateY(0) scale(1);
     }
 
     @keyframes item-fade-up {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(10px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
@@ -1208,27 +1206,25 @@
     [data-section] .tl-item,
     [data-section] .ra-row { opacity: 0; }
 
-    /* AI card: internal stagger */
-    [data-section].sec-visible .ai-conclusion-row { animation: item-fade-up 350ms var(--ease-out) 80ms  both; }
-    [data-section].sec-visible .ai-conclusion-body { animation: item-fade-up 350ms var(--ease-out) 180ms both; }
-    [data-section].sec-visible .ai-meta-row        { animation: item-fade-up 300ms var(--ease-out) 270ms both; }
+    /* summary: 3 items × 160ms stagger */
+    [data-section].sec-visible .ai-conclusion-row { animation: item-fade-up 400ms var(--ease-out) 100ms  both; }
+    [data-section].sec-visible .ai-conclusion-body { animation: item-fade-up 400ms var(--ease-out) 260ms both; }
+    [data-section].sec-visible .ai-meta-row        { animation: item-fade-up 350ms var(--ease-out) 420ms both; }
 
-    /* Fact cells stagger */
-    [data-section].sec-visible .fact-cell:nth-child(1) { animation: item-fade-up 300ms var(--ease-out) 100ms both; }
-    [data-section].sec-visible .fact-cell:nth-child(2) { animation: item-fade-up 300ms var(--ease-out) 170ms both; }
-    [data-section].sec-visible .fact-cell:nth-child(3) { animation: item-fade-up 300ms var(--ease-out) 240ms both; }
-    [data-section].sec-visible .fact-cell:nth-child(4) { animation: item-fade-up 300ms var(--ease-out) 310ms both; }
+    /* facts: 4 fact-cells then 4 tl-items, each 160ms apart */
+    [data-section].sec-visible .fact-cell:nth-child(1) { animation: item-fade-up 380ms var(--ease-out) 100ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(2) { animation: item-fade-up 380ms var(--ease-out) 260ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(3) { animation: item-fade-up 380ms var(--ease-out) 420ms both; }
+    [data-section].sec-visible .fact-cell:nth-child(4) { animation: item-fade-up 380ms var(--ease-out) 580ms both; }
+    [data-section].sec-visible .tl-item:nth-child(1)   { animation: item-fade-up 380ms var(--ease-out) 740ms both; }
+    [data-section].sec-visible .tl-item:nth-child(2)   { animation: item-fade-up 380ms var(--ease-out) 900ms both; }
+    [data-section].sec-visible .tl-item:nth-child(3)   { animation: item-fade-up 380ms var(--ease-out) 1060ms both; }
+    [data-section].sec-visible .tl-item:nth-child(4)   { animation: item-fade-up 380ms var(--ease-out) 1220ms both; }
 
-    /* Timeline items stagger */
-    [data-section].sec-visible .tl-item:nth-child(1) { animation: item-fade-up 300ms var(--ease-out) 160ms both; }
-    [data-section].sec-visible .tl-item:nth-child(2) { animation: item-fade-up 300ms var(--ease-out) 250ms both; }
-    [data-section].sec-visible .tl-item:nth-child(3) { animation: item-fade-up 300ms var(--ease-out) 340ms both; }
-    [data-section].sec-visible .tl-item:nth-child(4) { animation: item-fade-up 300ms var(--ease-out) 430ms both; }
-
-    /* Action rows stagger */
-    [data-section].sec-visible .ra-row:nth-child(1) { animation: item-fade-up 320ms var(--ease-out) 100ms both; }
-    [data-section].sec-visible .ra-row:nth-child(2) { animation: item-fade-up 320ms var(--ease-out) 220ms both; }
-    [data-section].sec-visible .ra-row:nth-child(3) { animation: item-fade-up 320ms var(--ease-out) 340ms both; }
+    /* actions: 3 ra-rows × 160ms stagger */
+    [data-section].sec-visible .ra-row:nth-child(1) { animation: item-fade-up 380ms var(--ease-out) 100ms both; }
+    [data-section].sec-visible .ra-row:nth-child(2) { animation: item-fade-up 380ms var(--ease-out) 260ms both; }
+    [data-section].sec-visible .ra-row:nth-child(3) { animation: item-fade-up 380ms var(--ease-out) 420ms both; }
 
     /* Loading indicator */
     .investigation-loading {
@@ -1681,7 +1677,7 @@
             <div class="response-card" id="responseCard">
 
               <!-- § Outer card header -->
-              <div class="response-card-header">
+              <div class="response-card-header" data-section="header">
                 <span class="rc-incident-name">Credential theft + lateral movement</span>
                 <span class="ai-verdict-badge">Malicious</span>
               </div>
@@ -2304,15 +2300,17 @@
       }, 320);
     }, allDone);
 
-    // Show investigation card
+    // Show investigation card — build section by section
     setTimeout(() => {
       investigationRow.style.display = '';
-      const sections = investigationRow.querySelectorAll('[data-section]');
-      sections.forEach((el, i) => {
-        setTimeout(() => el.classList.add('sec-visible'), i * 400);
+      const parts = investigationRow.querySelectorAll('#responseCard [data-section]');
+      const SECTION_MS = 700;
+      parts.forEach((el, i) => {
+        setTimeout(() => {
+          el.classList.add('sec-visible');
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, i * SECTION_MS);
       });
-      // Scroll to show the collapsed reasoning header + top of card, not the bottom
-      loadingRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }, allDone + 700);
   }
 
