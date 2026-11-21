@@ -293,7 +293,7 @@
     .g1-inner-card {
       background: linear-gradient(145deg, #0C0C10 5%, #141840 95%);
       border-radius: var(--r-16);
-      overflow: hidden;
+      overflow: visible;
       box-shadow: 0 2px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
     }
     .g1-inner-card-actions {
@@ -332,6 +332,69 @@
       font-size: 16px; font-weight: 400; color: #ffffff;
       font-family: 'Figtree', sans-serif; line-height: 22px;
     }
+
+    /* ─── Hover tooltips ─── */
+    .has-tip { position: relative; cursor: default; }
+    .tip {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      bottom: calc(100% + 9px);
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 210px;
+      background: rgba(10, 12, 28, 0.98);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 50;
+      box-shadow: 0 10px 32px rgba(0,0,0,0.65);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .has-tip:hover .tip { opacity: 1; }
+    .tip-title {
+      display: block;
+      font-family: 'Figtree', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.4);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding-bottom: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .tip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .tip-key {
+      font-family: 'Figtree', sans-serif;
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.42);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .tip-val {
+      font-family: 'Figtree', sans-serif;
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.86);
+      font-weight: 500;
+      text-align: right;
+    }
+    .tip-val.ok  { color: #2BB076; }
+    .tip-val.warn { color: #FFA07A; }
+    .tip-val.bad { color: #f87171; }
+    /* variants */
+    .tip--below { bottom: auto; top: calc(100% + 9px); }
+    .tip--right { left: auto; right: 0; transform: none; }
+    .tip--left  { left: 0; transform: none; }
 
     .ai-verdict-badge {
       display: inline-flex; align-items: center;
@@ -811,7 +874,7 @@
       display: flex; align-items: flex-start; gap: 12px;
       padding: 12px 14px;
       border-radius: 10px;
-      position: relative; overflow: hidden;
+      position: relative; overflow: visible;
       background:
         linear-gradient(93deg, #1B0136 -13.43%, #004A6E 131.47%) padding-box,
         linear-gradient(93deg, #362A9E 0%, #085D80 100%) border-box;
@@ -1667,7 +1730,7 @@
               <!-- § Outer card header -->
               <div class="response-card-header" data-section="header">
                 <span class="rc-incident-name">Credential theft + lateral movement</span>
-                <span class="ai-verdict-badge">Malicious</span>
+                <span class="ai-verdict-badge has-tip">Malicious<span class="tip tip--below tip--right"><span class="tip-title">AI Verdict</span><span class="tip-row"><span class="tip-key">Threat type</span><span class="tip-val">Credential theft + ransomware</span></span><span class="tip-row"><span class="tip-key">Composite</span><span class="tip-val">94% confidence</span></span><span class="tip-row"><span class="tip-key">Attribution</span><span class="tip-val">LockBit affiliate TTPs</span></span></span></span>
               </div>
 
               <!-- § AI Conclusion (Figma 193-35905) -->
@@ -1843,9 +1906,9 @@
                       </div>
                       <p class="ra-summary">Unsigned SYSTEM process actively archiving endpoint files via VPN</p>
                       <div class="ra-meta-chips">
-                        <span class="ra-chip">Confidence 96%</span>
-                        <span class="ra-chip ra-chip--guardrail">Guardrail passed</span>
-                        <span class="ra-chip">Reversible</span>
+                        <span class="ra-chip has-tip">Confidence 96%<span class="tip"><span class="tip-title">Confidence Score</span><span class="tip-row"><span class="tip-key">Signals</span><span class="tip-val">3 correlated</span></span><span class="tip-row"><span class="tip-key">Sources</span><span class="tip-val">Endpoint · WildFire</span></span><span class="tip-row"><span class="tip-key">Verdict</span><span class="tip-val ok">High confidence</span></span></span></span>
+                        <span class="ra-chip ra-chip--guardrail has-tip">Guardrail passed<span class="tip"><span class="tip-title">Guardrail Check</span><span class="tip-row"><span class="tip-key">Policy</span><span class="tip-val">Endpoint isolation</span></span><span class="tip-row"><span class="tip-key">Scope</span><span class="tip-val">Single host only</span></span><span class="tip-row"><span class="tip-key">Result</span><span class="tip-val ok">Passed ✓</span></span></span></span>
+                        <span class="ra-chip has-tip">Reversible<span class="tip"><span class="tip-title">Reversibility</span><span class="tip-row"><span class="tip-key">Type</span><span class="tip-val ok">Reversible</span></span><span class="tip-row"><span class="tip-key">Undo</span><span class="tip-val">Re-connect to network</span></span><span class="tip-row"><span class="tip-key">Time</span><span class="tip-val">Immediate</span></span></span></span>
                       </div>
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
@@ -1884,9 +1947,9 @@
                       </div>
                       <p class="ra-summary">Compromised account used to deploy malicious agent and move laterally</p>
                       <div class="ra-meta-chips">
-                        <span class="ra-chip">Confidence 85%</span>
-                        <span class="ra-chip ra-chip--approval-required">Approval required</span>
-                        <span class="ra-chip">Reversible</span>
+                        <span class="ra-chip has-tip">Confidence 85%<span class="tip"><span class="tip-title">Confidence Score</span><span class="tip-row"><span class="tip-key">Signals</span><span class="tip-val">Impossible travel + cred dump + RDP</span></span><span class="tip-row"><span class="tip-key">Sources</span><span class="tip-val">Identity · Network logs</span></span><span class="tip-row"><span class="tip-key">Verdict</span><span class="tip-val ok">High confidence</span></span></span></span>
+                        <span class="ra-chip ra-chip--approval-required has-tip">Approval required<span class="tip"><span class="tip-title">Approval Needed</span><span class="tip-row"><span class="tip-key">Reviewer</span><span class="tip-val">SOC lead</span></span><span class="tip-row"><span class="tip-key">Type</span><span class="tip-val">Account access</span></span><span class="tip-row"><span class="tip-key">Impact</span><span class="tip-val warn">Active sessions killed</span></span></span></span>
+                        <span class="ra-chip has-tip">Reversible<span class="tip"><span class="tip-title">Reversibility</span><span class="tip-row"><span class="tip-key">Type</span><span class="tip-val ok">Reversible</span></span><span class="tip-row"><span class="tip-key">Undo</span><span class="tip-val">Re-issue account password</span></span><span class="tip-row"><span class="tip-key">Time</span><span class="tip-val">Immediate</span></span></span></span>
                       </div>
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
@@ -1925,9 +1988,9 @@
                       </div>
                       <p class="ra-summary">Malware binary with no prior detection history dropped on the endpoint</p>
                       <div class="ra-meta-chips">
-                        <span class="ra-chip">Confidence 87%</span>
-                        <span class="ra-chip ra-chip--guardrail">Guardrail checked</span>
-                        <span class="ra-chip ra-chip--irreversible">Irreversible</span>
+                        <span class="ra-chip has-tip">Confidence 87%<span class="tip"><span class="tip-title">Confidence Score</span><span class="tip-row"><span class="tip-key">Match</span><span class="tip-val">LockBit family (5/5)</span></span><span class="tip-row"><span class="tip-key">Sources</span><span class="tip-val">WildFire · ReversingLabs</span></span><span class="tip-row"><span class="tip-key">Verdict</span><span class="tip-val ok">High confidence</span></span></span></span>
+                        <span class="ra-chip ra-chip--guardrail has-tip">Guardrail checked<span class="tip"><span class="tip-title">Guardrail Check</span><span class="tip-row"><span class="tip-key">Policy</span><span class="tip-val">Org-wide hash block</span></span><span class="tip-row"><span class="tip-key">Scope</span><span class="tip-val warn">All org endpoints</span></span><span class="tip-row"><span class="tip-key">Pending</span><span class="tip-val warn">CISO sign-off</span></span></span></span>
+                        <span class="ra-chip ra-chip--irreversible has-tip">Irreversible<span class="tip"><span class="tip-title">Reversibility</span><span class="tip-row"><span class="tip-key">Type</span><span class="tip-val bad">Irreversible ⚠</span></span><span class="tip-row"><span class="tip-key">Scope</span><span class="tip-val">All org endpoints</span></span><span class="tip-row"><span class="tip-key">Effect</span><span class="tip-val">Permanent hash blocklist</span></span></span></span>
                       </div>
                       <div class="ra-findings">
                         <div class="ra-findings-inner">
@@ -1946,11 +2009,6 @@
                   </div>
 
                 </div>
-
-                <button class="ra-add-action-btn">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 2v12M2 8h12"/></svg>
-                  Add action
-                </button>
 
                 <div class="ra-execute-all-footer" id="ra-execute-all-footer">
                   <span class="ra-execute-all-count"></span>
